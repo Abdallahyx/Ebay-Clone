@@ -3,7 +3,7 @@ from django.urls import path
 from .views import CartListView, CartAddProducts, CartRemoveProducts
 
 urlpatterns = [
-    path("", CartListView.as_view()),
-    path("add/<str:slug>/", CartAddProducts.as_view()),
-    path("remove/<str:slug>/", CartRemoveProducts.as_view()),
+    path("cart/view/", CartListView.as_view()),
+    path("cart/add/<str:slug>/", CartAddProducts.as_view()),
+    path("cart/remove/<str:slug>/", CartRemoveProducts.as_view()),
 ]
