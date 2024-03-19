@@ -2,7 +2,16 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path("api/registration/", UserRegistrationAPIView.as_view(), name="registration"),
+    path(
+        "api/registration/buyer",
+        BuyerRegistrationAPIView.as_view(),
+        name="buyer register",
+    ),
+    path(
+        "api/registration/seller",
+        SellerRegistrationAPIView.as_view(),
+        name="seller register",
+    ),
     # path(
     #     "confirm_email/<token>/<email>/",
     #     ConfirmEmailAPIView.as_view(),
@@ -28,8 +37,8 @@ urlpatterns = [
     # ),
     path("api/profile/", UserProfileAPIView.as_view(), name="profile"),
     path(
-        "api/bonuses_balance/",
-        UserBonusesBalanceAPIView.as_view(),
+        "api/balance/",
+        UserBalanceAPIView.as_view(),
         name="bonuses_balance",
     ),
     # path("", include(router.urls)),

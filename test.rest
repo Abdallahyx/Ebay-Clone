@@ -1,4 +1,4 @@
-curl -H "Authorization: Token bb0e020ec3c3066014113693a8fc9543ddb3d9eb" http://localhost:8000/cart/view/
+curl -H "Authorization: Token bb0e020ec3c3066014113693a8fc9543ddb3d9eb" http://localhost:8000/api/balance/
 
 ###
 

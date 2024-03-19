@@ -7,6 +7,7 @@ from .serializers import (
     BuyerRegistrationSerializer,
     LoginSerializer,
     ProfileSerializer,
+    SellerRegistrationSerializer,
     UserBalanceSerializer,
 )
 from .permissions import IsNotAuthenticated
@@ -19,9 +20,24 @@ from rest_framework import viewsets
 from rest_framework import mixins
 
 
-class UserRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
+class BuyerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = BuyerRegistrationSerializer
+    permission_classes = [IsNotAuthenticated]
+    token_type = TokenTypes.SIGNUP
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        return Response(
+            {"status": 200, "message": "registered", "data": response.data},
+            status=status.HTTP_200_OK,
+        )
+
+
+class SellerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SellerRegistrationSerializer
     permission_classes = [IsNotAuthenticated]
     token_type = TokenTypes.SIGNUP
 
@@ -98,7 +114,7 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
         return user
 
 
-class UserBonusesBalanceAPIView(generics.ListAPIView):
+class UserBalanceAPIView(generics.ListAPIView):
     serializer_class = UserBalanceSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
@@ -108,7 +124,7 @@ class UserBonusesBalanceAPIView(generics.ListAPIView):
         return self.queryset.filter(user=self.request.user)
 
 
-class UpdateUserBonusesBalanceViewSet(
+class UpdateUserBalanceViewSet(
     mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = UserBalanceSerializer

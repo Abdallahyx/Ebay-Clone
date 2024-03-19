@@ -84,7 +84,7 @@ class Seller(models.Model):
         verbose_name_plural = "Sellers"
 
     def __str__(self):
-        return f"{self.company_name} {self.company_address} {self.company_city} {self.company_country}"
+        return f"{self.company_name} {self.company_address}, {self.company_city}, {self.company_country}"
 
 
 class UserToken(models.Model):
