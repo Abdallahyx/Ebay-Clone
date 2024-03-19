@@ -1,14 +1,36 @@
 from django.urls import path
-from djoser.views import UserViewSet
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from .views import *
 
 urlpatterns = [
-    path("register/", UserViewSet.as_view({"post": "create"}), name="register"),
-    path("login/", TokenObtainPairView.as_view(), name="login"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("api/registration/", UserRegistrationAPIView.as_view(), name="registration"),
+    # path(
+    #     "confirm_email/<token>/<email>/",
+    #     ConfirmEmailAPIView.as_view(),
+    #     name="confirm-email",
+    # ),
+    path("api/login/", LoginAPIView.as_view(), name="login"),
+    path("api/logout/", LogoutAPIView.as_view(), name="logout"),
+    # path("change_email/", ChangeEmailAPIView.as_view(), name="change_email_send"),
+    # path(
+    #     "change_email_confirm/<token>/<email>/",
+    #     ChangeEmailConfirmAPIView.as_view(),
+    #     name="change_email_confirm",
+    # ),
+    # path(
+    #     "password_reset/",
+    #     SendPasswordResetAPIView.as_view(),
+    #     name="send_password_reset",
+    # ),
+    # path(
+    #     "password_reset/<token>/<email>/",
+    #     PasswordResetAPIView.as_view(),
+    #     name="password_reset",
+    # ),
+    path("api/profile/", UserProfileAPIView.as_view(), name="profile"),
+    path(
+        "api/bonuses_balance/",
+        UserBonusesBalanceAPIView.as_view(),
+        name="bonuses_balance",
+    ),
+    # path("", include(router.urls)),
 ]
