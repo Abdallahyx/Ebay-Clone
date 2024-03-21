@@ -54,7 +54,10 @@ class User(PermissionsMixin, AbstractBaseUser):
             self.username = User.objects.generate_username(email)
         if "@" not in self.username:
             self.username = "@" + self.username
+        is_new = not self.pk  # Check if this is a new instance
         super().save(*args, **kwargs)
+        if is_new:
+            UserBalance.objects.create(user=self)
 
     @property
     def full_name(self):
