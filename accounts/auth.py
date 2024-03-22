@@ -1,6 +1,7 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authentication import get_authorization_header
+from django.utils.translation import gettext as _
 
 
 class CustomTokenAuthentication(TokenAuthentication):
