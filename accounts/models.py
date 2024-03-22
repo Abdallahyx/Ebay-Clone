@@ -44,7 +44,8 @@ class User(PermissionsMixin, AbstractBaseUser):
         verbose_name_plural = "Users"
 
     def __str__(self):
-        return f"{self.username}: {self.first_name} {self.surname}"
+        balance = UserBalance.objects.filter(user=self).first().balance
+        return f"{self.username}: {self.first_name} {self.surname}, Balance: {balance}$"
 
     def save(self, *args, **kwargs):
         if self._state.adding and (

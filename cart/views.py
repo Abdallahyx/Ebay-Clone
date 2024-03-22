@@ -1,3 +1,4 @@
+from accounts.auth import CustomTokenAuthentication
 from .models import Cart
 from rest_framework.generics import ListAPIView
 
@@ -19,7 +20,7 @@ class CartListView(ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     serializer_class = CartSerializer
 
     def get_queryset(self, *args, **kwargs):
@@ -32,7 +33,7 @@ class CartAddProducts(ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
     def get_queryset(self, *args, **kwargs):
         request = self.request
@@ -57,7 +58,7 @@ class CartRemoveProducts(ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
     def get_queryset(self, *args, **kwargs):
         request = self.request

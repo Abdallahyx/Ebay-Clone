@@ -191,7 +191,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         required=False,
     )
     phone_number = serializers.CharField(required=False)  # new field
-    balance = UserBalanceSerializer(read_only=True)
+    balance = serializers.FloatField(source="balance.balance", read_only=True)
 
     class Meta:
         model = User

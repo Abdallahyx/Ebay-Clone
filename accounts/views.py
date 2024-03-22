@@ -3,6 +3,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics, status
+
+from accounts.auth import CustomTokenAuthentication
 from .serializers import (
     BuyerRegistrationSerializer,
     LoginSerializer,
@@ -84,7 +86,7 @@ class LoginAPIView(APIView):
 
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
     def get(self, *args, **kwargs):
         user = self.request.user
@@ -106,7 +108,7 @@ class LogoutAPIView(APIView):
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     queryset = User.objects.all()
 
     def get_object(self):
@@ -117,7 +119,7 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
 class UserBalanceAPIView(generics.ListAPIView):
     serializer_class = UserBalanceSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     queryset = UserBalance.objects.all()
 
     def get_queryset(self):
@@ -129,7 +131,7 @@ class UpdateUserBalanceViewSet(
 ):
     serializer_class = UserBalanceSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     queryset = UserBalance.objects.all()
 
     def get_object(self):
