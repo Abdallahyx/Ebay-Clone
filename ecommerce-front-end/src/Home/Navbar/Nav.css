@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.navbar
+{
+    margin: 15px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+
+}
+.navbar .rightcompnent ul img{
+    width: 25%;
+    margin-left: 10px;
+}
+ul
+{
+   display: flex;
+    align-items: center;
+    flex-direction: row;
+    list-style: none;
+    justify-content: space-around;
+
+}
+ul a {
+    text-decoration: none;
+    color: black;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    position: relative; /* Add position relative for pseudo-element */
+    transition: color 0.5s; /* Transition link color */
+}
+
+/* Add underline effect */
+ul a::after {
+    content: '';
+    position: absolute;
+    left: 0; /* Start from the left */
+    bottom: -3px; /* Adjust the position of the underline */
+    width: 0; /* Initially hide the underline */
+    height: 2px; /* Thickness of the underline */
+    background-color: black;
+    transition: width 0.5s, left 0.5s; /* Transition width and left position */
+}
+
+/* Show underline on hover */
+ul a:hover::after {
+    width: 100%; /* Expand the width to the right */
+    left: 0; /* Reset left position */
+}
+.icons
+{
+    display: flex;
+    justify-content: flex-end;
+    
+}
+.icons img
+{   
+    margin: 10px;
+    width: 3.5%;
+    transition: transform 0.5s;
+
+}   
+.icons img:hover
+{
+    transform: scale(1.1);
+    transition: transform 0.5s;
+}
