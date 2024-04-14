@@ -13,7 +13,7 @@ import "./Nav.css";
 function Nav() {
   const navigate = useNavigate();
   const submitHandler = () => {
-    navigate("/login");
+    navigate("/account");
   };
   const [hovercart, sethovercart] = useState(false);
   const handleMouseEnterCart = () => {
