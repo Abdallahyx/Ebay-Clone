@@ -112,10 +112,16 @@ function Account() {
               {/* Add the user's email here */}
             </div>
             <div className="address menuitem">
-              <h4>Address</h4>
+              <h4>Address1</h4>
               <p className="text">123, ABC street, XYZ city</p>
               {/* Add the user's address here */}
             </div>
+            <div className="address menuitem">
+              <h4>Address2</h4>
+              <p className="text">123, ABC street, XYZ city</p>
+              {/* Add the user's address here */}
+            </div>
+            <a href="#"><h3>Order History</h3></a>{/*instead of # add the link to the order history page*/}
           </div>
         </div>
       </div>
