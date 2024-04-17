@@ -47,7 +47,7 @@ function Nav() {
             <a href="/home">
               <li>Home</li>
             </a>
-            <a href="/login">
+            <a href="/shop">
               <li>Shop</li>
             </a>
             <a href="/login">

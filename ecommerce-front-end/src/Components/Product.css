@@ -10,6 +10,9 @@
     overflow: hidden;
     height: 400px;
     transition: 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .Productitem .Image:hover img {
