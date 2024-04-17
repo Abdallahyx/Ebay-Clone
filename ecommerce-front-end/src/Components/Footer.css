@@ -1,0 +1,111 @@
+.Footer
+{
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Right
+{
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.Left .textt
+{
+    font-size: 20px;
+    margin: 20px 0px;
+    font-weight:500;
+}
+.Left {
+    margin-left: 40px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.Left p {
+    margin: 10px 0; 
+}
+
+.Left .emailcomp {
+    margin-top: 10px;
+}
+
+.Left .emailcomp input {
+    margin-right: 10px; 
+}
+.emailcomp
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.Right .footercolumn p
+{   
+    opacity: 0.7;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.Right .footercolumn .text
+{
+    opacity: 1;
+    font-size: 20px;
+    margin: 20px 0px;
+    font-weight:500;
+}
+
+a
+{
+
+    text-decoration: underline;
+    color: black;
+    opacity:1;
+}
+
+.emailcomp
+{
+    margin: 20px 0px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.Footer .Left input
+{
+    width: 40%;
+    border: none;
+    margin: 20px 0px;
+
+
+}
+.Footer .Left button
+{
+    transition: 0.3s;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+.Footer .Left button:hover
+{
+    transition: 0.3s;
+
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+.ReservedRights
+{
+    margin-top: 20px;
+    margin-left:40px;
+    margin-bottom: 20px;
+}
+.Right .footercolumn .text
+{
+    cursor:default;
+}

@@ -16,87 +16,91 @@
   margin-left: 6%;
 }
 
-.bigtitle  {
+.bigtitle {
   margin-top: 30px;
   flex-direction: column;
 }
-.largee
-{
-    font-size: 90px;
-
+.largee {
+  font-size: 90px;
 }
 
 .textt {
-    margin-top: 20px;
+  margin-top: 20px;
   width: 100%;
   font-size: 22px;
 }
-.shop
-{
-    width:40%;
+.shop {
+  width: 40%;
 }
 .shop button {
-    background-color: black;
-    color: white;
-    padding: 16px;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    margin-top: 30px;
-    border-radius: 5px;
-    cursor: pointer; /* Optional: Add cursor pointer */
-    font-weight: lighter; /* Adjust font weight */
-    transition: 0.3s; /* Animation effect on hover */
-  }
-  .shop button img{
-    width:4%;
-    margin-left: 15px;
-    fill: white;
+  background-color: black;
+  color: white;
+  padding: 16px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 30px;
+  border-radius: 5px;
+  cursor: pointer; 
+  font-weight: lighter; 
+  transition: 0.3s; 
 }
-.shop button:hover
-{
-    transition: 0.3s;
-    background-color: white;
-    color: black;
+.shop button img {
+  width: 4%;
+  margin-left: 15px;
+  fill: white;
 }
-.twoo
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.shop button:hover {
+  transition: 0.3s;
+  background-color: white;
+  color: black;
 }
-.containerr .twoo img
-{
-    width: 80%;
-    border-radius: 5px;
-    transition: 0.3s;
-    cursor: pointer;
+.twoo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.containerr .twoo img:hover
-{
-    transition: 0.3s;
-    transform: scale(1.1);
+.containerr .twoo img {
+  width: 80%;
+  border-radius: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.containerr .twoo img:hover {
+  transition: 0.3s;
+  transform: scale(1.1);
 }
 .scrolling-text-container {
-    background-color: black;
-    color: white;
-    overflow: hidden;
-    width: 100%;
-    padding: 10px 0px;
-  }
-  
-  .scrolling-text {
-    animation: scroll-left 25s linear infinite;
-  }
-  
-  @keyframes scroll-left {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
+  background-color: black;
+  color: white;
+  overflow: hidden;
+  width: 100%;
+  padding: 10px 0px;
+}
 
+.scrolling-text {
+  animation: scroll-left 25s linear infinite;
+}
+.Products .Productt {
+  width: 22%;
+}
+.Products {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

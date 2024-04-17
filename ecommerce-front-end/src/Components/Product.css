@@ -1,0 +1,57 @@
+.Productitem {
+    transition: 0.3s ease;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.Productitem .Image {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+    transition: 0.3s ease;
+}
+
+.Productitem .Image:hover img {
+    transition: 0.3s ease;
+    transform: scale(1.1);
+}
+
+.Productitem .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.Productitem .Image:hover .overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.Productitem img {
+    width: 100%;
+    border-radius: 5px;
+    transition: 0.3s;
+    cursor: pointer;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.Productitem h3 {
+    font-weight: normal;
+}
+
+.Price {
+    font-weight: 500;
+}

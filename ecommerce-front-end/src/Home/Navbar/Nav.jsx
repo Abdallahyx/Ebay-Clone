@@ -69,7 +69,6 @@ function Nav() {
             onMouseEnter={handleMouseEnterContact}
             onMouseLeave={handleMouseLeaveContact}
             onClick={submitHandler}
-
             src={hoverc ? contacthover : contact}
             alt="contact"
           />
