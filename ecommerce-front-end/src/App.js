@@ -5,13 +5,18 @@ import RegisterPage from "./Pages/RegisterPage";
 import HomePage from "./Pages/HomePage";
 import ProfilePage from "./Pages/ProfilePage";
 import ShopPage from "./Pages/ShopPage";
+import RegisterationType from "./Pages/RegisterationType";
+import SellerRegisteration from "./Pages/SellerRegisteration";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/registerationtype" element={<RegisterationType/>}/>
+        <Route path="/signupbuyer" element={<RegisterPage />} />
         <Route path="/signup" element={<RegisterPage />} />
+        <Route path="/signupseller" element={<SellerRegisteration />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="*" element={<Login />} />
         <Route path="/account" element={<ProfilePage />} />{" "}

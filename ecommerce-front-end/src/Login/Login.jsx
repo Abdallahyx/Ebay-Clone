@@ -24,7 +24,7 @@ function Login() {
           />
           <div className="buttonss">
             <button type="submit">Login</button>
-            <a href="/signup">New customer? Create your account</a>
+            <a href="/registerationtype">New customer? Create your account</a>
           </div>
         </form>
       </div>

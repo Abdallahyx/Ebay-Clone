@@ -1,18 +1,7 @@
 import "./Register.css";
 import Logo from "../SVGs/Logo.svg";
-import React, { useState } from "react";
 
 function Register() {
-  const [companyNameVisible, setCompanyNameVisible] = useState(false);
-
-  const handleRoleChange = (event) => {
-    if (event.target.value === "seller") {
-      setCompanyNameVisible(true);
-    } else {
-      setCompanyNameVisible(false);
-    }
-  };
-
   return (
     <div className="wrapper">
       <div className="logo">
@@ -20,11 +9,11 @@ function Register() {
       </div>
       <div className="border">
         <form className="LoginContainer">
-          <label htmlFor="name">Your name</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
-            placeholder="First and last name"
-            name="name"
+            placeholder="Username"
+            name="username"
             required
           />
           <label htmlFor="email">Email</label>
@@ -36,25 +25,39 @@ function Register() {
             name="password"
             required
           />
-          <label htmlFor="password">Re-enter Password</label>
-          <input type="password" name="repassword" required />
-          <label htmlFor="role">I am a</label>
-          <select id="role" name="role" onChange={handleRoleChange} required>
+          <label htmlFor="Confirmpassword">Confirm Password</label>
+          <input type="Confirmpassword"
+          placeholder="Confirmpassword"
+           name="repassword" required />
+          <label htmlFor="Firstname">First name</label>
+          <input
+            type="text"
+            placeholder="Firstname"
+            name="Firstname"
+            required
+          />
+          <label htmlFor="Surname">Surname</label>
+          <input
+            type="text"
+            placeholder="Surname"
+            name="Surname"
+            required
+          />
+          <label htmlfor="Gender">Gender</label>
+          <select  name="gender"  required>
             <option value="">Select...</option>
-            <option value="buyer">Buyer</option>
-            <option value="seller">Seller</option>
+            <option value="buyer">Male</option>
+            <option value="seller">Female</option>
           </select>
-          {companyNameVisible && (
-            <>
-              <label htmlFor="companyName">Company Name</label>
-              <input
-                type="text"
-                placeholder="Enter company name"
-                name="companyName"
-                required
-              />
-            </>
-          )}
+          <label htmlFor="phone">Phone number</label>
+          <input
+            type="number"
+            placeholder="Phone number"
+            name="phone"
+            required
+          />
+            
+    
           <div className="buttonss">
             <button type="submit">Register</button>
           </div>
