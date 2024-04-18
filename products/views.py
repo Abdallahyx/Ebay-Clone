@@ -4,11 +4,17 @@ from rest_framework.permissions import IsAuthenticated
 
 from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsStore
+from products.utils import ProductVariationsMixin
 
 from . import models
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
+from .models import Category, Product, ProductVariations
+from .serializers import (
+    CategorySerializer,
+    ProductSerializer,
+    ProductVariationsSerializer,
+)
 from rest_framework.pagination import PageNumberPagination
+from django.http import Http404
 
 
 class ProductListView(generics.ListAPIView):
@@ -78,3 +84,32 @@ class CategoryItemView(generics.ListAPIView):
 class CategoryCreateView(generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class ProductVariationsAPIView(ProductVariationsMixin, generics.ListAPIView):
+    queryset = ProductVariations.objects.all()
+    serializer_class = ProductVariationsSerializer
+
+    def get_queryset(self):
+        self.reset_related_variations()
+        try:
+            return self.get_related_variations(product_slug=self.kwargs["product_slug"])
+        except Product.DoesNotExist:
+            raise Http404("Product does not exist")
+
+
+class ProductVariationsByParentAPIView(ProductVariationsAPIView):
+    """
+    Endpoint for returning variations of product,
+    but filtered by parent_slug.
+    'parent_slug' - slug of ParentOfVariationCategory model instance
+    """
+
+    def get_queryset(self):
+        try:
+            return self.get_related_variations_by_parent(
+                product_slug=self.kwargs["product_slug"],
+                parent_slug=self.kwargs["parent_slug"],
+            )
+        except Product.DoesNotExist:
+            raise Http404("Product does not exist")

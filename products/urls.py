@@ -25,4 +25,14 @@ urlpatterns = [
         name="product-delete",
     ),
     path("categories/create/", CategoryCreateView.as_view(), name="category-create"),
+    path(
+        "variations/<slug:product_slug>/",
+        ProductVariationsAPIView.as_view(),
+        name="product_variations",
+    ),
+    path(
+        "variations/<slug:product_slug>/<slug:parent_slug>/",
+        ProductVariationsByParentAPIView.as_view(),
+        name="product_variations_by_parent",
+    ),
 ]

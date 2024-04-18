@@ -1,30 +1,44 @@
 from django.db import models
-from .services import get_discount
 from django.urls import reverse
-from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
+from django.utils.text import slugify
+from accounts.models import Store
+from products.services import get_discount
 
 
 class Category(MPTTModel):
-    name = models.CharField(max_length=250, verbose_name="Name", unique=True)
-    parent = TreeForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        verbose_name="Parent",
-        blank=True,
-        null=True,
-        related_name="children",
-    )
+    """
+    Category Table implimented with MPTT.
+    """
 
-    class Meta:
-        verbose_name = "category"
-        verbose_name_plural = "Categories"
+    name = models.CharField(
+        verbose_name=_("Category Name"),
+        help_text=_("Required and unique"),
+        max_length=255,
+        unique=True,
+    )
+    slug = models.SlugField(
+        verbose_name=_("Category safe URL"), max_length=255, unique=True
+    )
+    parent = TreeForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
+    )
+    is_active = models.BooleanField(default=True)
 
     class MPTTMeta:
         order_insertion_by = ["name"]
 
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    @property
+    def get_absolute_url(self):
+        return reverse("store:category_list", args=[self.slug])
+
     def __str__(self):
-        return f"Category: {self.name}"
+        return self.name
 
 
 class ProductDescriptionCategory(models.Model):
@@ -84,7 +98,7 @@ class ProductCharacteristics(models.Model):
         related_name="characteristics",
     )
     product = models.ForeignKey(
-        "Products",
+        "Product",
         on_delete=models.CASCADE,
         verbose_name="Product",
         related_name="characteristics",
@@ -110,22 +124,26 @@ class AvailabilityStatuses:
     out_of_stock = (4, "out of stock")
 
 
-class Products(models.Model):
+class Product(models.Model):
+    """
+    The Product table contining all product items.
+    """
+
     AVAILABILITY_STATUSES = (
         AvailabilityStatuses.in_stock,
         AvailabilityStatuses.awaiting_arrival,
         AvailabilityStatuses.low_in_stock,
         AvailabilityStatuses.out_of_stock,
     )
-    name = models.CharField(max_length=350, verbose_name="Name")
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        verbose_name="Category",
-        related_name="products",
-        blank=True,
-        null=True,
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.RESTRICT)
+    title = models.CharField(
+        verbose_name=_("title"),
+        help_text=_("Required"),
+        max_length=255,
     )
+
+    slug = models.SlugField(max_length=255)
     price = models.IntegerField(default=0, verbose_name="Price")
     description = models.ForeignKey(
         ProductDescription,
@@ -139,27 +157,28 @@ class Products(models.Model):
         upload_to="images/products/", verbose_name="Photo", blank=True, null=True
     )
     discount = models.IntegerField(default=0, verbose_name="Discount(Optional)")
-    bonuses = models.IntegerField(default=0, verbose_name="Bonuses(Optional)")
-    article = models.CharField(
-        max_length=8, verbose_name="Article", blank=True, null=True
+    is_active = models.BooleanField(
+        verbose_name=_("Product visibility"),
+        help_text=_("Change product visibility"),
+        default=True,
     )
+    created_at = models.DateTimeField(
+        _("Created at"), auto_now_add=True, editable=False
+    )
+    updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
     availability_status = models.IntegerField(default=1, choices=AVAILABILITY_STATUSES)
-    slug = models.SlugField(unique=True, verbose_name="Slug")
     rating = models.DecimalField(
         max_digits=2, decimal_places=1, verbose_name="Rating", default=0
     )
 
     class Meta:
-        verbose_name = "product"
-        verbose_name_plural = "Products"
+        ordering = ("-created_at",)
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
 
-    def __str__(self):
-        return f"{self.name}"
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug != slugify(self.name):
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+    @property
+    def get_absolute_url(self):
+        return reverse("store:product_detail", args=[self.slug])
 
     @property
     def price_with_discount(self):
@@ -169,27 +188,38 @@ class Products(models.Model):
         price_with_discount = get_discount(self.price, self.discount)
         return price_with_discount
 
+    def __str__(self):
+        return self.title
 
-class ProductPhotos(models.Model):
+
+def upload_to(instance, filename):
+    return "images/{filename}".format(filename=filename)
+
+
+class ProductImage(models.Model):
+    """
+    The Product Image table.
+    """
+
     product = models.ForeignKey(
-        Products,
-        on_delete=models.CASCADE,
-        verbose_name="Product",
-        related_name="photos",
+        Product, on_delete=models.CASCADE, related_name="product_image"
     )
-    photo = models.ImageField(
-        upload_to="images/products/all/",
-        verbose_name="Product photos",
-        blank=True,
-        null=True,
+    image = models.ImageField(
+        verbose_name=_("image"),
+        help_text=_("Upload a product image"),
+        upload_to=upload_to,
+        default="images/default.png",
     )
+    is_featured = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "photo"
-        verbose_name_plural = "Photos"
+        verbose_name = _("Product Image")
+        verbose_name_plural = _("Product Images")
 
     def __str__(self):
-        return f"Photo of: {self.product.name}"
+        return self.alt_text if self.alt_text else self.image.url
 
 
 class ParentOfVariationCategory(models.Model):
@@ -254,7 +284,7 @@ class ProductVariations(models.Model):
         VariationCategory, on_delete=models.CASCADE, verbose_name="Variation category"
     )
     product = models.ForeignKey(
-        Products,
+        Product,
         on_delete=models.CASCADE,
         verbose_name="Product",
         blank=True,
@@ -279,5 +309,5 @@ class ProductVariations(models.Model):
         return self.product.name
 
     @property
-    def product_link(self):
-        return reverse("products-detail", kwargs={"pk": self.product.pk})
+    def get_absolute_url(self):
+        return reverse("store:product_detail", args=[self.product.slug])
