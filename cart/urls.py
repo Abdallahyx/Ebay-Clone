@@ -1,9 +1,18 @@
 from django.urls import path
-
-from .views import CartListView, CartAddProducts, CartRemoveProducts
+from .views import *
 
 urlpatterns = [
-    path("cart/view/", CartListView.as_view()),
-    path("cart/add/<str:slug>/", CartAddProducts.as_view()),
-    path("cart/remove/<str:slug>/", CartRemoveProducts.as_view()),
+    path("cart/", CartAPIView.as_view(), name="cart_detail"),
+    path("cart/add/<str:slug>/", AddToCartAPIView.as_view()),
+    path(
+        "cart/add_quantity/<str:slug>/",
+        CartItemAddQuantityAPIView.as_view(),
+        name="item_add_quantity",
+    ),
+    path(
+        "cart/minus_quantity/<str:slug>/",
+        CartItemMinusQuantityAPIView.as_view(),
+        name="item_minus_quantity",
+    ),
+    path("cart/clear/", CartClearAPIView.as_view(), name="cart_clear"),
 ]

@@ -65,30 +65,37 @@ class User(PermissionsMixin, AbstractBaseUser):
         return f"{self.first_name} {self.surname}"
 
 
-class Seller(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="User")
-    company_name = models.CharField(
-        max_length=200, verbose_name="Company name", blank=True, null=True
+class Store(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="User",
+        related_name="store_info",
+        blank=True,
+        null=True,
     )
-    company_address = models.CharField(
-        max_length=200, verbose_name="Company address", blank=True, null=True
+    store_name = models.CharField(
+        max_length=200, verbose_name="Store name", blank=True, null=True
     )
-    company_city = models.CharField(
-        max_length=100, verbose_name="Company city", blank=True, null=True
+    store_address = models.CharField(
+        max_length=200, verbose_name="Store address", blank=True, null=True
     )
-    company_country = models.CharField(
-        max_length=100, verbose_name="Company country", blank=True, null=True
+    store_city = models.CharField(
+        max_length=100, verbose_name="Store city", blank=True, null=True
     )
-    company_phone_number = models.CharField(
-        max_length=15, verbose_name="Company phone number", blank=True, null=True
+    store_country = models.CharField(
+        max_length=100, verbose_name="Store country", blank=True, null=True
+    )
+    store_phone_number = models.CharField(
+        max_length=15, verbose_name="Store phone number", blank=True, null=True
     )
 
     class Meta:
-        verbose_name = "seller"
-        verbose_name_plural = "Sellers"
+        verbose_name = "store"
+        verbose_name_plural = "stores"
 
     def __str__(self):
-        return f"{self.company_name} {self.company_address}, {self.company_city}, {self.company_country}"
+        return f"{self.store_name} {self.store_address}, {self.store_city}, {self.store_country}"
 
 
 class UserToken(models.Model):

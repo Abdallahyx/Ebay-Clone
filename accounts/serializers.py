@@ -1,10 +1,11 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import Seller, User, UserBalance, UserShippingInfo
+from .models import Store, User, UserBalance, UserShippingInfo
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
+from rest_framework import serializers
 
 
 class ShippingInfoSerializer(serializers.ModelSerializer):
@@ -13,7 +14,7 @@ class ShippingInfoSerializer(serializers.ModelSerializer):
         fields = ["address", "city", "country"]
 
 
-class BuyerRegistrationSerializer(serializers.Serializer):
+class CustomerRegistrationSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         required=False, validators=[UniqueValidator(queryset=User.objects.all())]
@@ -75,19 +76,19 @@ class BuyerRegistrationSerializer(serializers.Serializer):
         return user
 
 
-class CompanyInfoSerializer(serializers.ModelSerializer):
+class StoreInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Seller
+        model = Store
         fields = (
-            "company_name",
-            "company_address",
-            "company_city",
-            "company_country",
-            "company_phone_number",
+            "store_name",
+            "store_address",
+            "store_city",
+            "store_country",
+            "store_phone_number",
         )
 
 
-class SellerRegistrationSerializer(serializers.Serializer):
+class StoreRegistrationSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         required=False, validators=[UniqueValidator(queryset=User.objects.all())]
@@ -116,7 +117,7 @@ class SellerRegistrationSerializer(serializers.Serializer):
         allow_null=False,
     )
     phone_number = serializers.CharField(required=True)  # new field
-    company_info = CompanyInfoSerializer()
+    store_info = StoreInfoSerializer()
 
     def validate(self, attrs):
         if attrs["confirm_password"] != attrs["password"]:
@@ -127,7 +128,7 @@ class SellerRegistrationSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         password = validated_data.pop("password")
-        company_info_data = validated_data.pop("company_info")
+        store_info_data = validated_data.pop("store_info")
         username = validated_data.pop("username", None)
 
         if not username:
@@ -144,7 +145,7 @@ class SellerRegistrationSerializer(serializers.Serializer):
         )
         user.set_password(password)
         user.save()
-        Seller.objects.create(user=user, **company_info_data)
+        Store.objects.create(user=user, **store_info_data)
         Token.objects.create(user=user)  # creating authentication token
         return user
 
@@ -192,6 +193,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     )
     phone_number = serializers.CharField(required=False)  # new field
     balance = serializers.FloatField(source="balance.balance", read_only=True)
+    shipping_info = ShippingInfoSerializer()
 
     class Meta:
         model = User
@@ -203,7 +205,19 @@ class ProfileSerializer(serializers.ModelSerializer):
             "gender",
             "phone_number",
             "balance",
+            "shipping_info",
         )
+
+    def update(self, instance, validated_data):
+        shipping_info_data = validated_data.pop("shipping_info", None)
+        instance = super().update(instance, validated_data)
+
+        if shipping_info_data is not None:
+            UserShippingInfo.objects.update_or_create(
+                user=instance, defaults=shipping_info_data
+            )
+
+        return instance
 
 
 class UserShippingInfoSerializer(serializers.ModelSerializer):

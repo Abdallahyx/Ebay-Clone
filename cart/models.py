@@ -1,67 +1,55 @@
+from django.utils import timezone
 from django.db import models
-from django.contrib.auth import get_user_model
-from django.conf import settings
-from decimal import Decimal
-from django.db.models.signals import pre_save, post_save, m2m_changed
-
 from products.models import Product
-
-# Create your models here.
-
-User = get_user_model()
-
-
-class CartManager(models.Manager):
-    def new(self, request):
-        return self.model.objects.create(user=request.user)
-
-    def user_cart(self, request):
-        return self.model.objects.filter(email=request.user)
-
-    def get_cart_or_create_cart(self, request):
-        obj, created = self.model.objects.get_or_create(user=request.user)
-        if created:
-            qs = self.model.objects.filter(user=request.user)
-        else:
-            qs = self.model.objects.filter(user=request.user)
-        return qs
+from accounts.models import User
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product, blank=True)
-    tax = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
-    subtotal = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
-    total = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
-    updated = models.DateTimeField(auto_now=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="User",
+        blank=True,
+        null=True,
+        related_name="Cart",
+    )
+    created_at = models.DateTimeField(verbose_name="Created at", default=timezone.now)
 
-    objects = CartManager()
+    class Meta:
+        verbose_name = "Cart"
+        verbose_name_plural = "Carts"
 
     def __str__(self):
-        return f"{self.user.email} | ${self.total}"
+        return f"Cart of {self.user.username}"
+
+    def __len__(self):
+        return sum(item.quantity for item in self.items.all())
+
+    @property
+    def total_amount(self):
+        return sum(item.total_price for item in self.items.all())
 
 
-def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
-    if action == "post_add" or action == "post_remove" or action == "post_clear":
-        products = instance.products.all()
-        total = 0
-        for x in products:
-            total += x.price
-        if instance.subtotal != total:
-            instance.subtotal = total
-            instance.save()
+class CartItems(models.Model):
+    cart = models.ForeignKey(
+        Cart, on_delete=models.CASCADE, verbose_name="Cart", related_name="items"
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, verbose_name="Product"
+    )
+    quantity = models.IntegerField(default=0, verbose_name="Item quantity")
+    total_price = models.IntegerField(default=0, verbose_name="Total price of item")
 
+    class Meta:
+        verbose_name = "item"
+        verbose_name_plural = "Cart items"
 
-m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.products.through)
+    def __str__(self):
+        return f"Cart item {self.product.title}"
 
-
-def pre_save_cart_receiver(sender, instance, *args, **kwargs):
-    if instance.subtotal > 0:
-        tax = 1 + (instance.tax / 100)
-        instance.total = Decimal(instance.subtotal) * Decimal(tax)
-    else:
-        instance.total = 0.00
-
-
-pre_save.connect(pre_save_cart_receiver, sender=Cart)
+    def save(self, *args, **kwargs):
+        if self.product.discount_price:
+            self.total_price = self.product.discount_price * self.quantity
+        else:
+            self.total_price = self.product.regular_price * self.quantity
+        super().save(*args, **kwargs)

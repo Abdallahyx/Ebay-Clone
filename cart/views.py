@@ -1,78 +1,90 @@
-from accounts.auth import CustomTokenAuthentication
-from .models import Cart
-from rest_framework.generics import ListAPIView
-
-from django.http import Http404
-from rest_framework.authentication import TokenAuthentication
-
-from rest_framework.decorators import permission_classes
+from accounts.permissions import IsCustomer
+from .cart import SessionCart
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
-from rest_framework import permissions
-
-from .serializers import CartSerializer
-from products.models import Product
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from products.models import Product, AvailabilityStatuses
+from django.shortcuts import get_object_or_404
+from .utils import CartMixin, CartOperationTypes
+from .models import Cart, CartItems
+from rest_framework import status
 from django.conf import settings
-
-User = settings.AUTH_USER_MODEL
-
-
-class CartListView(ListAPIView):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    authentication_classes = [CustomTokenAuthentication]
-    serializer_class = CartSerializer
-
-    def get_queryset(self, *args, **kwargs):
-        qs = Cart.objects.get_cart_or_create_cart(request=self.request)
-        return qs
+from CustomAuth.auth import CustomTokenAuthentication
 
 
-class CartAddProducts(ListAPIView):
-    serializer_class = CartSerializer
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    authentication_classes = [CustomTokenAuthentication]
+def get_or_create_cart(request, user):
+    """
+    This function is used to get the cart from
+    the session and create it in the database.
 
-    def get_queryset(self, *args, **kwargs):
-        request = self.request
-        slug = self.kwargs.get("slug")
-        product_obj = Product.objects.get(slug=slug)
-        qs = Product.objects.filter(slug=slug)
+    Args:
+        request (Request): The user's request.
+        user (User): User instance.
+    """
+    cart = SessionCart(request)
+    user_cart, _ = Cart.objects.get_or_create(user=user)
+    for item in cart:
+        CartItems.objects.get_or_create(
+            cart=user_cart,
+            product=item["product"],
+            quantity=item["quantity"],
+            total_price=item["total_price"],
+        )
+    cart.clear()
 
-        cart_obj = Cart.objects.filter(user__email=request.user)
-        if cart_obj.exists():
-            qs_cart = cart_obj.first()
+
+class CartAPIView(CartMixin, APIView):
+    # permission_classes = [IsCustomer]
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+
+    def get(self, *args, **kwargs):
+        print(settings.BASE_DIR)
+        data = self.get_cart_data(self.request)
+
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class OperationCartAPIView(CartMixin, APIView):
+    """
+    This method is a parent class for other Cart
+    Operations API endpoints and is not used in URLs,
+    therefore it has no associated link. It defines the
+    operation_type attribute which is used to specify the type
+    of cart operation to perform. The get method calls
+    the cart_operation method of the CartMixin class with
+    the request and product arguments to perform the specified
+    cart operation and returns the resulting data as a response.
+    """
+
+    def post(self, *args, **kwargs):
+        product = get_object_or_404(Product, slug=kwargs[""])
+        if product.availability_status != AvailabilityStatuses.out_of_stock[0]:
+            data = self.cart_operation(self.request, product)
+            return Response(data=data)
         else:
-            qs_cart = Cart.objects.new(request=request)
-
-        if product_obj.slug in [x.slug for x in qs]:
-            qs_cart.products.add(product_obj)
-        user_qs = Cart.objects.filter(user=request.user)
-        return user_qs
+            return Response({"not available": "This product now is not in stock now"})
 
 
-class CartRemoveProducts(ListAPIView):
-    serializer_class = CartSerializer
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    authentication_classes = [CustomTokenAuthentication]
+class AddToCartAPIView(OperationCartAPIView):
+    operation_type = CartOperationTypes.cart_add
 
-    def get_queryset(self, *args, **kwargs):
-        request = self.request
-        slug = self.kwargs.get("slug")
-        product_obj = Product.objects.get(slug=slug)
-        qs = Product.objects.filter(slug=slug)
 
-        cart_obj = Cart.objects.filter(user__email=request.user)
-        if cart_obj.exists():
-            qs_cart = cart_obj.first()
-        else:
-            qs_cart = Cart.objects.new(request=request)
+class CartItemAddQuantityAPIView(OperationCartAPIView):
+    operation_type = CartOperationTypes.item_add_quantity
 
-        if product_obj.slug in [x.slug for x in qs]:
-            qs_cart.products.remove(product_obj)
-        user_qs = Cart.objects.filter(user=request.user)
-        return user_qs
+
+class CartItemMinusQuantityAPIView(OperationCartAPIView):
+    operation_type = CartOperationTypes.item_minus_quantity
+
+
+class CartClearAPIView(OperationCartAPIView):
+    operation_type = CartOperationTypes.cart_clear
+
+    def get(self, *args, **kwargs):
+        data = self.get_cart_data(self.request)
+        return Response(data=data)
+
+    def post(self, *args, **kwargs):
+        data = self.cart_operation(self.request)
+        return Response(data=data)

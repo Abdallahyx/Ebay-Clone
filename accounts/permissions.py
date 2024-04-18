@@ -13,3 +13,21 @@ class IsNotAuthenticated(permissions.BasePermission):
             return True
 
         return bool(not request.user.is_authenticated)
+
+
+class IsStore(permissions.BasePermission):
+    """
+    Custom permission to only allow sellers to access the view
+    """
+
+    def has_permission(self, request, view):
+        return request.user.groups.filter(name="Stores").exists()
+
+
+class IsCustomer(permissions.BasePermission):
+    """
+    Custom permission to only allow buyers to access the view
+    """
+
+    def has_permission(self, request, view):
+        return request.user.groups.filter(name="Customers").exists()
