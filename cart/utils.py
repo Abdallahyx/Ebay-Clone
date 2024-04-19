@@ -44,6 +44,7 @@ class CartMixin:
         if not request.user.is_authenticated:
             self.__cart = SessionCart(request)
             self.__cart.add(product)
+
         else:
             self.__cart, _ = (
                 Cart.objects.prefetch_related("items")

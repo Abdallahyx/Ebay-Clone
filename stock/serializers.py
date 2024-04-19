@@ -31,7 +31,7 @@ class StockItemsSerializer(serializers.ModelSerializer):
         return obj.product.title
 
     def get_product_link(self, obj):
-        return reverse("store:product_detail", args=[obj.product.slug])
+        return reverse("products:product-detail", args=[obj.product.slug])
 
     def get_product_category_name(self, obj):
         return obj.product.category.name

@@ -33,12 +33,6 @@ class Order(models.Model):
     order_status = models.IntegerField(
         verbose_name="Order status", choices=ORDER_STATUSES, default=1
     )
-    store = models.ForeignKey(
-        Store,
-        on_delete=models.CASCADE,
-        verbose_name="Store",
-        related_name="orders",
-    )
 
     total_amount = models.IntegerField(default=0, verbose_name="Total amount of order")
     coupon = models.ForeignKey(
@@ -83,6 +77,12 @@ class OrderItems(models.Model):
     )
     quantity = models.IntegerField(default=0, verbose_name="Quantity")
     total_price = models.IntegerField(default=0, verbose_name="Total price")
+    store = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        verbose_name="Store",
+        related_name="orders",
+    )
 
     class Meta:
         verbose_name = "item"

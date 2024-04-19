@@ -35,7 +35,7 @@ class Category(MPTTModel):
 
     @property
     def get_absolute_url(self):
-        return reverse("store:category_list", args=[self.slug])
+        return reverse("products:category_list", args=[self.slug])
 
     def __str__(self):
         return self.name
@@ -178,7 +178,7 @@ class Product(models.Model):
 
     @property
     def product_link(self):
-        return reverse("store:product_detail", args=[self.slug])
+        return reverse("products:product_detail", args=[self.slug])
 
     @property
     def price_with_discount(self):
@@ -187,6 +187,10 @@ class Product(models.Model):
         """
         price_with_discount = get_discount(self.price, self.discount)
         return price_with_discount
+
+    @price_with_discount.setter
+    def price_with_discount(self, value):
+        self.price = value / (1 - self.discount / 100)
 
     def __str__(self):
         return self.title
@@ -310,4 +314,4 @@ class ProductVariations(models.Model):
 
     @property
     def product_link(self):
-        return reverse("store:product_detail", args=[self.product.slug])
+        return reverse("products:product_detail", args=[self.product.slug])

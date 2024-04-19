@@ -36,7 +36,7 @@ class SessionCartSerializer(serializers.Serializer):
         items = []
         for item in instance:
             item_data = item.copy()
-            item_data["product_name"] = item_data.get("product").name
+            item_data["product_title"] = item_data.get("product").title
             item_data["product"] = item_data.pop("product").id
             items.append(item_data)
         return {"items": items}

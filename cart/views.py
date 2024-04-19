@@ -68,18 +68,49 @@ class OperationCartAPIView(CartMixin, APIView):
 
 class AddToCartAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.cart_add
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+
+    def get(self, *args, **kwargs):
+        data = self.get_cart_data(self.request)
+        return Response(data=data)
+
+    def post(self, *args, **kwargs):
+        product = get_object_or_404(Product, slug=kwargs["slug"])
+        data = self.cart_operation(self.request, product)
+        return Response(data=data)
 
 
 class CartItemAddQuantityAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.item_add_quantity
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+
+    def get(self, *args, **kwargs):
+        data = self.get_cart_data(self.request)
+        return Response(data=data)
+
+    def post(self, *args, **kwargs):
+        product = get_object_or_404(Product, slug=kwargs["slug"])
+        data = self.cart_operation(self.request, product)
+        return Response(data=data)
 
 
 class CartItemMinusQuantityAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.item_minus_quantity
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+
+    def get(self, *args, **kwargs):
+        data = self.get_cart_data(self.request)
+        return Response(data=data)
+
+    def post(self, *args, **kwargs):
+        product = get_object_or_404(Product, slug=kwargs["slug"])
+        data = self.cart_operation(self.request, product)
+        return Response(data=data)
 
 
 class CartClearAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.cart_clear
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
 
     def get(self, *args, **kwargs):
         data = self.get_cart_data(self.request)

@@ -59,7 +59,7 @@ class SessionCart:
         for product in products:
             cart[str(product.slug)]["product"] = product
         for item in cart.values():
-            if item["product"].discount_price:
+            if item["product"].discount:
                 item["total_price"] = item["price_with_discount"] * item["quantity"]
             else:
                 item["total_price"] = item["price"] * item["quantity"]
@@ -88,21 +88,19 @@ class CartItemData(NamedTuple):
 
 
 def check_cart_item(cart, product):
-    product_slug = product.slug
-    if CartItems.objects.filter(cart=cart, product_slug=product_slug).exists():
-        item = CartItems.objects.get(cart=cart, product_slug=product_slug)
+    if CartItems.objects.filter(cart=cart, product=product).exists():
+        item = CartItems.objects.get(cart=cart, product=product)
         return CartItemData(item=item, exist=True)
     return CartItemData(exist=False)
 
 
 def get_or_create_cart_item(cart, product: Product) -> CartItemData:
-    product_slug = product.slug
     item_data = check_cart_item(cart, product)
     if item_data.item and item_data.exist:
-        item = CartItems.objects.get(cart=cart, product_slug=product_slug)
+        item = CartItems.objects.get(cart=cart, product=product)
     else:
         item = CartItems.objects.create(
-            basket=cart, product=product, quantity=1, total_price=product.price
+            cart=cart, product=product, quantity=1, total_price=product.price
         )
         return CartItemData(item=item, exist=True)
     return CartItemData(item, exist=False)
@@ -120,7 +118,7 @@ def cart_add_item(cart, product):
 
 def cart_remove_item(cart, product):
     try:
-        item = CartItems.objects.get(cart=cart, product_slug=product.slug)
+        item = CartItems.objects.get(cart=cart, product=product)
         item.delete()
     except CartItems.DoesNotExist:
         return False

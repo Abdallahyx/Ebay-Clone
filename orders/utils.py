@@ -64,7 +64,6 @@ class OrderMixin(CartMixin):
         """
         total_values_order = order.items.aggregate(
             total_amount=Sum("total_price"),
-            total_bonuses_amount=Sum("product__bonuses"),
         )
         return total_values_order
 
@@ -147,13 +146,15 @@ class OrderMixin(CartMixin):
 
                 for item in cart_data["items"]:
                     # items['product'] - id of product
+                    product = Product.objects.get(id=item["product"])
+                    store = product.store
                     OrderItems.objects.create(
                         order=order,
-                        product_id=item["product"],
+                        product=product,
+                        store=store,
                         quantity=item["quantity"],
                         total_price=item["total_price"],
                     )
-
                 order_items = order.items.all().select_related("order", "product")
 
                 if order.coupon and self.order_total_amount_with_coupon(order):
@@ -177,7 +178,7 @@ class OrderMixin(CartMixin):
                     # we are  processing order payment with bonuses here only if
                     # payment method is by cash, to avoid withdrawal
                     # of bonuses without payment(in case if payment method is by card).
-                    self.send_email_with_invoice(order)
+                    # self.send_email_with_invoice(order)
 
                 response.data["order_items"] = self.items_serializer(
                     instance=order_items, many=True
@@ -208,12 +209,12 @@ class OrderMixin(CartMixin):
             shipping_info, _ = UserShippingInfo.objects.get_or_create(
                 user=self.request.user, defaults=shipping_info_data
             )
-            if not shipping_info.session_id:
-                shipping_info.session_id = session_id
-                shipping_info.save()
+            # if not shipping_info.session_id:
+            #     shipping_info.session_id = session_id
+            shipping_info.save()
         else:
             shipping_info, _ = UserShippingInfo.objects.get_or_create(
-                session_id=session_id, defaults=shipping_info_data
+                defaults=shipping_info_data
             )
         shipping_info.city = shipping_info_data["city"]
         shipping_info.save()
