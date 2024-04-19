@@ -209,8 +209,6 @@ class OrderMixin(CartMixin):
             shipping_info, _ = UserShippingInfo.objects.get_or_create(
                 user=self.request.user, defaults=shipping_info_data
             )
-            # if not shipping_info.session_id:
-            #     shipping_info.session_id = session_id
             shipping_info.save()
         else:
             shipping_info, _ = UserShippingInfo.objects.get_or_create(
