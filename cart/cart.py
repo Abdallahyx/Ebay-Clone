@@ -48,7 +48,10 @@ class SessionCart:
         product_slug = str(product.slug)
 
         if product_slug in self.cart:
-            self.cart[product_slug]["quantity"] -= 1
+            if self.cart[product_slug]["quantity"] > 1:
+                self.cart[product_slug]["quantity"] -= 1
+            else:
+                self.remove(product)
         self.save()
 
     def __iter__(self):
@@ -135,7 +138,7 @@ def cart_item_add_quantity(cart, product):
 def cart_item_minus_quantity(cart, product):
     cart_item_data = check_cart_item(cart, product)
     if cart_item_data.item and cart_item_data.exist:
-        if cart_item_data.item.quantity > 0:
+        if cart_item_data.item.quantity > 1:
             cart_item_data.item.quantity -= 1
             cart_item_data.item.save()
         else:
