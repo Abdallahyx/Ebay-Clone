@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from coupons.models import UserCoupons
 from .models import Order, OrderItems
 from payment.services import create_payment_info
 from products.serializers import ProductSerializer
@@ -22,6 +24,9 @@ class OrderItemsSerializer(serializers.ModelSerializer):
 class OrderSerializer(OrderMixin, serializers.ModelSerializer):
     shipping_info = UserShippingInfoSerializer()
     store_name = serializers.CharField(source="store.store_name", read_only=True)
+    coupon = serializers.PrimaryKeyRelatedField(
+        queryset=UserCoupons.objects.all(), allow_null=True, required=False
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
