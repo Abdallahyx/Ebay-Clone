@@ -43,7 +43,7 @@ function Register() {
             name="Surname"
             required
           />
-          <label htmlfor="Gender">Gender</label>
+          <label htmlFor="Gender">Gender</label>
           <select  name="gender"  required>
             <option value="">Select...</option>
             <option value="buyer">Male</option>
