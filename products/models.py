@@ -177,7 +177,7 @@ class Product(models.Model):
         verbose_name_plural = _("Products")
 
     @property
-    def get_absolute_url(self):
+    def product_link(self):
         return reverse("store:product_detail", args=[self.slug])
 
     @property
@@ -309,5 +309,5 @@ class ProductVariations(models.Model):
         return self.product.name
 
     @property
-    def get_absolute_url(self):
+    def product_link(self):
         return reverse("store:product_detail", args=[self.product.slug])

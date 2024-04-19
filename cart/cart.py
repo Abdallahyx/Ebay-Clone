@@ -24,8 +24,8 @@ class SessionCart:
         if product_slug not in self.cart:
             self.cart[product_slug] = {
                 "quantity": 1,
-                "price": product.regular_price,
-                "price_with_discount": product.discount_price,
+                "price": product.price,
+                "price_with_discount": product.price_with_discount,
             }
         else:
             self.cart[product_slug]["quantity"] += 1
@@ -60,9 +60,9 @@ class SessionCart:
             cart[str(product.slug)]["product"] = product
         for item in cart.values():
             if item["product"].discount_price:
-                item["total_price"] = item["discount_price"] * item["quantity"]
+                item["total_price"] = item["price_with_discount"] * item["quantity"]
             else:
-                item["total_price"] = item["regular_price"] * item["quantity"]
+                item["total_price"] = item["price"] * item["quantity"]
             yield item
 
     def __len__(self):
@@ -75,7 +75,7 @@ class SessionCart:
         Getting overall total price of all
         products in the cart
         """
-        return sum(item["regular_price"] for item in self.cart.values())
+        return sum(item["price"] for item in self.cart.values())
 
     def clear(self):
         del self.session[settings.CART_SESSION]
@@ -99,7 +99,7 @@ def get_or_create_cart_item(cart, product: Product) -> CartItemData:
     product_slug = product.slug
     item_data = check_cart_item(cart, product)
     if item_data.item and item_data.exist:
-        item = CartItems.objects.get(basket=cart, product_slug=product_slug)
+        item = CartItems.objects.get(cart=cart, product_slug=product_slug)
     else:
         item = CartItems.objects.create(
             basket=cart, product=product, quantity=1, total_price=product.price

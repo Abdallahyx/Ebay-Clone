@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
+from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsCustomer, IsStore
 from .serializers import OrderSerializer, OrderItemsSerializer, OrdersForStoreSerializer
 from .models import Order
@@ -21,7 +22,7 @@ class OrderAPIView(OrderMixin, ListCreateAPIView):
     items_serializer = OrderItemsSerializer
     queryset = Order.objects.all()
     permission_classes = [IsCustomer]
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
 
     def list(self, request, *args, **kwargs):
         data = self.get_cart_data(request)
@@ -50,12 +51,7 @@ class OrderPaypalPaymentComplete(OrderMixin, APIView):
             except (Exception,):
                 return Response({"error": "Order error."})
             order.payment_info.is_paid = True
-            if order.user and order.total_bonuses_amount > 0:
-                order.user.bonuses_balance.balance += order.total_bonuses_amount
-                order.user.bonuses_balance.save()
-                order.payment_info.bonus_taken = True
             order.payment_info.save()
-            mixin.send_email_with_invoice(order)
 
             if self.request.user.is_authenticated:
                 coupons = None
@@ -81,8 +77,14 @@ class OrdersViewSet(
 ):
     serializer_class = OrdersForStoreSerializer
     permission_classes = [IsStore]
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
-    queryset = Order.objects.all()
+    authentication_classes = [CustomTokenAuthentication, SessionAuthentication]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            store = self.request.user.store_info
+            return Order.objects.filter(store=store)
+        else:
+            return Order.objects.none()
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)

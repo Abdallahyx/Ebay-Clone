@@ -11,11 +11,10 @@ def draw_pdf_invoice(order):
     data = [["Product name", "Quantity", "Price"]]
 
     for item in order.items.all():
-        data.append([item.product.name, str(item.quantity), str(item.product.price)])
+        data.append([item.product.title, str(item.quantity), str(item.product.price)])
 
     # Add row for bonuses and paid status
     data.append(["", "", ""])
-    data.append(["Bonuses:", "", f"{order.total_bonuses_amount}$"])
     data.append(["Paid:", "", "Yes" if order.payment_info.is_paid else "No"])
 
     style = TableStyle(

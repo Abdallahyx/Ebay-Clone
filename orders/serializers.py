@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Order, OrderItems
 from payment.services import create_payment_info
-from products.serializers import ProductsSerializer
+from products.serializers import ProductSerializer
 from accounts.serializers import UserShippingInfoSerializer
 from .utils import OrderMixin
 from payment.serializers import PaymentInfoSerializer
@@ -9,7 +9,7 @@ from payment.serializers import PaymentInfoSerializer
 
 class OrderItemsSerializer(serializers.ModelSerializer):
     order_id = serializers.SerializerMethodField()
-    product = ProductsSerializer()
+    product = ProductSerializer()
 
     class Meta:
         model = OrderItems
@@ -21,6 +21,7 @@ class OrderItemsSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(OrderMixin, serializers.ModelSerializer):
     shipping_info = UserShippingInfoSerializer()
+    store_name = serializers.CharField(source="store.store_name", read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,13 +35,11 @@ class OrderSerializer(OrderMixin, serializers.ModelSerializer):
         model = Order
         fields = (
             "id",
+            "store_name",
             "shipping_info",
             "payment_method",
-            "delivery_method",
             "coupon",
-            "activate_bonuses",
             "comment",
-            "create_account",
             "total_amount",
         )
         read_only_fields = ["total_amount"]
@@ -68,23 +67,21 @@ class OrderSerializer(OrderMixin, serializers.ModelSerializer):
 
 class OrdersForStoreSerializer(OrderSerializer):
     payment_info = PaymentInfoSerializer()
+    store_name = serializers.CharField(source="store.store_name", read_only=True)
 
     class Meta:
         model = Order
         fields = (
             "id",
+            "store_name",
             "shipping_info",
-            "delivery_method",
             "coupon",
-            "activate_bonuses",
             "comment",
-            "create_account",
             "total_amount",
             "payment_info",
         )
         read_only_fields = [
             "total_amount",
             "coupon",
-            "activate_bonuses",
-            "create_account",
+            "comment",
         ]

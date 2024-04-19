@@ -1,6 +1,7 @@
 from django.db import models
+from coupons.models import UserCoupons
 from products.models import Product
-from accounts.models import UserShippingInfo, User
+from accounts.models import Store, UserShippingInfo, User
 
 
 class Order(models.Model):
@@ -32,9 +33,21 @@ class Order(models.Model):
     order_status = models.IntegerField(
         verbose_name="Order status", choices=ORDER_STATUSES, default=1
     )
+    store = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        verbose_name="Store",
+        related_name="orders",
+    )
 
     total_amount = models.IntegerField(default=0, verbose_name="Total amount of order")
-
+    coupon = models.ForeignKey(
+        UserCoupons,
+        on_delete=models.SET_NULL,
+        verbose_name="Coupon",
+        blank=True,
+        null=True,
+    )
     shipping_info = models.ForeignKey(
         UserShippingInfo,
         on_delete=models.SET_NULL,
@@ -77,4 +90,4 @@ class OrderItems(models.Model):
         ordering = ["total_price"]
 
     def __str__(self):
-        return f"Item: {self.product.name}, Order: {self.order}"
+        return f"Item: {self.product.title}, Order: {self.order}"

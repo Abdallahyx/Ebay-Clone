@@ -71,50 +71,38 @@ class OrderMixin(CartMixin):
     def process_order_payment_with_bonuses(self, order: Order):
         """
         Processes the payment for the given order
-        using user bonuses balance and updates the
+        using user balance and updates the
         payment status and order total amount accordingly.
         """
         order_total_values = self.get_order_total_values(order)
 
         order_total_amount = order_total_values["total_amount"]
-        order_total_bonuses_amount = order_total_values["total_bonuses_amount"]
 
-        if order.user and order.activate_bonuses and order.user.bonuses_balance:
-            # bonuses will be withdrawn from the user's bonuses balance
+        if order.user and order.user.balance.balance:
+            # balance will be withdrawn from the user's balance
             # only if he has selected this option
-            user_bonuses = order.user.bonuses_balance.balance
+            user_balance = order.user.balance.balance
 
-            if user_bonuses >= order_total_amount:
+            if user_balance >= order_total_amount:
                 # if the user's balance is greater than the
                 # total amount of the order, the total amount
-                # of order will be deducted from user's bonuses
-                # balance and order will be marked as paid.
-                order.user.bonuses_balance.balance = user_bonuses - order_total_amount
-                order.user.bonuses_balance.save()
+                # of order will be deducted from user's balance
+                # and order will be marked as paid.
+                order.user.balance.balance = user_balance - order_total_amount
+                order.user.balance.save()
 
                 payment_info = order.payment_info
                 payment_info.is_paid = True
                 payment_info.save()
 
-                if order_total_bonuses_amount > 0:
-                    # add order bonuses to the user's balance
-                    # we have the same operation in payment/signals.py in
-                    # pre save signal, but in this case it won't be working
-                    # because initially order not is_paid what is needed to call
-                    # pre save method
-                    order.user.bonuses_balance.balance += order_total_bonuses_amount
-                    order.user.bonuses_balance.save()
-                    payment_info.bonus_taken = True
-
                 payment_info.payment_amount = order_total_amount
                 payment_info.save()
 
-            elif order_total_amount > user_bonuses > 0:
-                order.user.bonuses_balance.balance = 0
-                order.user.bonuses_balance.save()
-                order_total_amount -= user_bonuses
+            elif order_total_amount > user_balance > 0:
+                order.user.balance.balance = 0
+                order.user.balance.save()
+                order_total_amount -= user_balance
 
-        order.total_bonuses_amount = order_total_bonuses_amount
         order.total_amount = order_total_amount
         order.save()
 
@@ -228,6 +216,5 @@ class OrderMixin(CartMixin):
                 session_id=session_id, defaults=shipping_info_data
             )
         shipping_info.city = shipping_info_data["city"]
-        shipping_info.post_office = shipping_info_data["post_office"]
         shipping_info.save()
         return shipping_info

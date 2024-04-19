@@ -48,8 +48,8 @@ class CartItems(models.Model):
         return f"Cart item {self.product.title}"
 
     def save(self, *args, **kwargs):
-        if self.product.discount_price:
-            self.total_price = self.product.discount_price * self.quantity
+        if self.product.discount:
+            self.total_price = self.product.price_with_discount * self.quantity
         else:
-            self.total_price = self.product.regular_price * self.quantity
+            self.total_price = self.product.price * self.quantity
         super().save(*args, **kwargs)
