@@ -33,7 +33,8 @@ function Product(product) {
             onMouseLeave={handleMouseLeaveCart}
             className="image1"
           >
-            <img src={hovercart ? carthover : cart} alt="add to cart" />
+            <img
+             src={hovercart ? carthover : cart} alt="add to cart" />
           </div>
           <div
             onMouseEnter={handleMouseEnterHeart}

@@ -121,7 +121,7 @@ function Account() {
               <p className="text">123, ABC street, XYZ city</p>
               {/* Add the user's address here */}
             </div>
-            <a href="#">
+            <a href="/orderhistory">
               <h3>Order History</h3>
             </a>
             {/*instead of # add the link to the order history page*/}

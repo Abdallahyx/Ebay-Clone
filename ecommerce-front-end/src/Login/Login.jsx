@@ -3,7 +3,8 @@ import Logo from "../SVGs/Logo.svg";
 import { useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
-  const submitHandler = () => {
+  const submitHandler = function() {
+    /*validate username password before navigation*/
     navigate("/home");
   };
   return (

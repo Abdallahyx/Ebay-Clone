@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./Nav.css";
 
-function Nav() {
+function Nav(x) {
+  
+  const [cartcount, setcartcount] = useState(5);
   const navigate = useNavigate();
   const submitHandler = () => {
     navigate("/account");
@@ -65,7 +67,8 @@ function Nav() {
           </ul>
         </div>
         <div className="icons">
-          <img
+          <img 
+           className="normalicons"
             onMouseEnter={handleMouseEnterContact}
             onMouseLeave={handleMouseLeaveContact}
             onClick={submitHandler}
@@ -73,18 +76,27 @@ function Nav() {
             alt="contact"
           />
           <img
+          className="normalicons"
             onMouseEnter={handleMouseEnterHeart}
             onMouseLeave={handleMouseLeaveHeart}
             src={hoverh ? hearthover : heart}
             alt="heart"
           />
 
-          <img
+         <div 
             onMouseEnter={handleMouseEnterCart}
             onMouseLeave={handleMouseLeaveCart}
+            className="cartcount"> <img
+         
             src={hovercart ? carthover : cart}
             alt="cart"
           />
+          {
+            cartcount > 0 ?
+          <div className="count"><p>{cartcount}</p></div>
+          : null
+          }
+          </div>
         </div>
       </nav>
     </div>
