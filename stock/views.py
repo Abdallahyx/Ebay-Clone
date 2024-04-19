@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsStore
 from .models import StockItems, Product
 from .serializers import StockItemsSerializer
@@ -12,6 +13,7 @@ from rest_framework import generics, status
 class StockItemsViewSet(ModelViewSet):
     serializer_class = StockItemsSerializer
     permission_classes = [IsAuthenticated, IsStore]
+    authentication_classes = [CustomTokenAuthentication]
 
     def get_queryset(self):
         # Check if the user is authenticated

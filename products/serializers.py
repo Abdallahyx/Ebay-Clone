@@ -21,7 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
     price_with_discount = serializers.ReadOnlyField()  # this is model property
     rating = serializers.DecimalField(read_only=True, decimal_places=1, max_digits=2)
     availability_status = serializers.SerializerMethodField()
-    product_images = ImageSerializer(many=True)
+    product_images = ImageSerializer()
 
     class Meta:
         model = Product
@@ -56,7 +56,7 @@ class ProductSerializer(serializers.ModelSerializer):
         images_data = validated_data.pop("product_images")
         product = Product.objects.create(**validated_data)
         for image_data in images_data:
-            ProductImage.objects.create(product=product, **image_data)
+            ProductImage.objects.create(product=product, image=image_data)
         return product
 
     def update(self, instance, validated_data):

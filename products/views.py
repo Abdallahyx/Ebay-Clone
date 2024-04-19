@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.serializers import ValidationError
 from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsStore
 from products.utils import ProductVariationsMixin
@@ -42,7 +42,11 @@ class ProductCreateView(generics.CreateAPIView):
     authentication_classes = [CustomTokenAuthentication]
 
     def perform_create(self, serializer):
-        serializer.save(seller=self.request.user)
+        product_slug = serializer.validated_data.get("slug")
+        if not Product.objects.filter(slug=product_slug).exists():
+            serializer.save(store=self.request.user.store_info)
+        else:
+            raise ValidationError("Product with this name already exists.")
 
 
 class ProductUpdateView(generics.UpdateAPIView):
@@ -53,7 +57,7 @@ class ProductUpdateView(generics.UpdateAPIView):
     lookup_field = "slug"
 
     def perform_update(self, serializer):
-        serializer.save(seller=self.request.user)
+        serializer.save(store=self.request.user.store_info)
 
 
 class ProductDeleteView(generics.DestroyAPIView):
