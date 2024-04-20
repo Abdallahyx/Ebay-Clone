@@ -5,6 +5,11 @@ import hearthover from "../SVGs/heartwhite.svg";
 import carthover from "../SVGs/cartwhite.svg";
 import { useState } from "react";
 function Product(product) {
+  let clicked=false;
+  const addCartHandler=()=>{
+    clicked=true;
+    product.onAddCartClick(clicked);
+  }
   const [hovercart, sethovercart] = useState(false);
   const handleMouseEnterCart = () => {
     sethovercart(true);
@@ -34,6 +39,7 @@ function Product(product) {
             className="image1"
           >
             <img
+            onClick={addCartHandler}
              src={hovercart ? carthover : cart} alt="add to cart" />
           </div>
           <div

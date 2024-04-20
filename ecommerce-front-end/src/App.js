@@ -8,6 +8,7 @@ import ShopPage from "./Pages/ShopPage";
 import RegisterationType from "./Pages/RegisterationType";
 import SellerRegisteration from "./Pages/SellerRegisteration";
 import OrderHistory from "./Pages/OrderHistory";
+
 function App() {
   return (
     <BrowserRouter>

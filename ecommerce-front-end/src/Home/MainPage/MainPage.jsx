@@ -9,9 +9,14 @@ import { useState } from "react";
 import Product from "../../Components/Product";
 import product4 from "../../SVGs/hmgoepprod3.webp";
 import Footer from "../../Components/Footer";
+import { useNavigate } from "react-router-dom";
 
-function MainPage() {
+function MainPage(props) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
+  const shopCollection = () => {
+    navigate("/shop");
+  }
 
   return (
     <div>
@@ -27,6 +32,7 @@ function MainPage() {
 
           <div className="shop">
             <button
+              onClick={shopCollection}
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
             >
@@ -50,24 +56,28 @@ function MainPage() {
       </div>
       <div className="Products">
         <Product
+          onAddCartClick={props.onAddCartClick}
           className="Productt"
           image={product1}
           name={"Ribbed modal T-shirt"}
           price={"$" + 18.0}
         />
         <Product
+          onAddCartClick={props.onAddCartClick}
           className="Productt"
           image={product2}
           name={"Oversized Motif T-shirt"}
           price={"$" + 18.0}
         />
         <Product
+          onAddCartClick={props.onAddCartClick}
           className="Productt"
           image={product3}
           name={"Oversized Printed T-shirt"}
           price={"$" + 18.0}
         />
         <Product
+          onAddCartClick={props.onAddCartClick}
           className="Productt"
           image={product4}
           name={"Oversized Smiling T-shirt"}

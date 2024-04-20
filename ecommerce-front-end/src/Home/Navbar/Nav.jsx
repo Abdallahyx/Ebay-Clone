@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./Nav.css";
 
-function Nav(x) {
-  
-  const [cartcount, setcartcount] = useState(5);
+function Nav(props) {
+
+
   const navigate = useNavigate();
   const submitHandler = () => {
     navigate("/account");
@@ -92,8 +92,8 @@ function Nav(x) {
             alt="cart"
           />
           {
-            cartcount > 0 ?
-          <div className="count"><p>{cartcount}</p></div>
+            props.count > 0 ?
+          <div className="count"><p>{props.count}</p></div>
           : null
           }
           </div>
