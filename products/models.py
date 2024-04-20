@@ -284,8 +284,8 @@ class VariationCategory(models.Model):
 
 
 class ProductVariations(models.Model):
-    variation_category = models.ForeignKey(
-        VariationCategory, on_delete=models.CASCADE, verbose_name="Variation category"
+    variation_category = models.ManyToManyField(
+        VariationCategory, verbose_name="Variation category"
     )
     product = models.ForeignKey(
         Product,
@@ -302,7 +302,7 @@ class ProductVariations(models.Model):
         unique_together = ("product", "variation_category")
 
     def __str__(self):
-        return f"Variation category: {self.variation_category.name}, Product: {self.product.name}"
+        return f"Product: {self.product.title}, Variations: {[var.name for var in self.variation_category.all()]}"
 
     @property
     def variation_category_name(self):
@@ -310,7 +310,7 @@ class ProductVariations(models.Model):
 
     @property
     def product_name(self):
-        return self.product.name
+        return self.product.title
 
     @property
     def product_link(self):
