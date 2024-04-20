@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 /*handle on click events*/
 
+
 function Account() {
   const navigate = useNavigate();
   const [hoverdash, sethoverdash] = useState(false);
@@ -131,4 +132,5 @@ function Account() {
     </div>
   );
 }
+
 export default Account;
