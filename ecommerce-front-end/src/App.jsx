@@ -20,18 +20,18 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registerationtype" element={<RegisterationType/>}/>
         <Route path="/signupbuyer" element={<RegisterPage />} />
-        <Route path="/signup" element={<RegisterPage />} />   
+        <Route path="/signup" element={<RegisterPage />} />
         <Route path="/signupseller" element={<SellerRegisteration />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="*" element={<Login />} />
+        <Route path="" element={<Login />} />
         <Route path="/account" element={<ProfilePage />} />{" "}
         <Route path="/selleraccount" element={<SellerProfilePage />} />{" "}
-        {/*should be account+id and should be if logged in*/}
+        {/should be account+id and should be if logged in/}
         <Route path="/shop" element={<ShopPage />} />
-        <Route path="/orderhistory" element={<OrderHistory/>}/> {/*should be orderhistory+accountid*/}
-        <Route path="/inventory" element={<InventoryPage/>}/> {/*should be orderhistory+accountid*/}
-        <Route path="/product/123" element={<ProductPage />} /> {/* Route for product page */}
-        
+        <Route path="/orderhistory" element={<OrderHistory/>}/> {/should be orderhistory+accountid/}
+        <Route path="/inventory" element={<InventoryPage/>}/> {/should be orderhistory+accountid/}
+        <Route path="/product/123" element={<ProductPage />} /> {/ Route for product page */}
+
       </Routes>
     </BrowserRouter>
   );
