@@ -1,0 +1,136 @@
+.product-container {
+  display: flex;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.product-image {
+  position: relative;
+  flex: 1;
+}
+
+.image-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  color: #fff;
+  padding: 0 10px;
+}
+
+.product-details {
+  flex: 1;
+  padding: 20px;
+}
+
+.price {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.discounted-price {
+  color: green;
+  font-weight: bold;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: gray;
+  margin-left: 10px;
+}
+
+.discount {
+  background-color: green;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+.viewers {
+  color: gray;
+  margin-bottom: 20px;
+}
+
+.color-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.color-choice {
+  display: flex;
+  margin-left: 10px;
+}
+
+.color-choice div {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.black {
+  background-color: #000;
+}
+
+.white {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.selected {
+  outline: 2px solid green;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.qty-control {
+  display: flex;
+  margin-left: 10px;
+}
+
+.qty-control button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.qty-control input {
+  width: 40px;
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.actions button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.add-to-cart {
+  font-weight: bold;
+}
+
+.buy-paypal {
+  background-color: #ffc439;
+  color: #000;
+}
+
+.more-options {
+  color: blue;
+  text-decoration: underline;
+}

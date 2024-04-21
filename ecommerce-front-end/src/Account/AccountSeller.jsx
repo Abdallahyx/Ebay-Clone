@@ -1,18 +1,16 @@
-import "./Account.css";
-import payment from "../SVGs/payment.svg";
+import "./AccountSeller.css";
 import address from "../SVGs/address.svg";
-import dashboard from "../SVGs/dashboard.svg";
-import paymenthover from "../SVGs/paymenthover.svg";
 import addresshover from "../SVGs/addresshover.svg";
+import dashboard from "../SVGs/dashboard.svg";
 import dashboardhover from "../SVGs/dashboardhover.svg";
+import payment from "../SVGs/payment.svg";
+import paymenthover from "../SVGs/paymenthover.svg";
 import logout from "../SVGs/logout.svg";
 import logouthover from "../SVGs/logouthover.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/*handle on click events*/
-
-function Account() {
+function AccountSeller() {
   const navigate = useNavigate();
   const [hoverdash, sethoverdash] = useState(false);
   const [hoverpayment, sethoverpayment] = useState(false);
@@ -21,6 +19,7 @@ function Account() {
   const handleLogout = () => {
     navigate("/login");
   };
+
   const handleMouseEnterdash = () => {
     sethoverdash(true);
     console.log("hovered");
@@ -95,7 +94,7 @@ function Account() {
           </p>{" "}
           {/* Add the user's name here instead of Ahmed*/}
           <div className="details">
-            <h3>Account details</h3>
+            <h3>Seller details</h3>
             <div className="name menuitem">
               <h4>Name</h4>
               <p className="text">Ahmed</p> {/* Add the user's name here */}
@@ -111,25 +110,34 @@ function Account() {
               <p className="text">asdd@yahoo.com</p>{" "}
               {/* Add the user's email here */}
             </div>
-            <div className="address menuitem">
-              <h4>Address1</h4>
-              <p className="text">123, ABC street, XYZ city</p>
-              {/* Add the user's address here */}
+            <h3>Store details</h3>
+            <div className="menuitem">
+              <h4>Store Name</h4>
+              <p className="text">SHOPIFY</p>
+              {/* Add the seller's store address */}
             </div>
-            <div className="address menuitem">
-              <h4>Address2</h4>
+            <div className="menuitem">
+              <h4>Store Address</h4>
               <p className="text">123, ABC street, XYZ city</p>
-              {/* Add the user's address here */}
+              {/* Add the seller's store address */}
             </div>
-            <a href="/orderhistory">
-              <h3>Order History</h3>
+            <div className="menuitem">
+              <h4>Store City</h4>
+              <p className="text">123, ABC street, XYZ city</p>
+              {/* Add the seller's store address */}
+            </div>
+            <div className="menuitem">
+              <h4>Store Country</h4>
+              <p className="text">123, ABC street, XYZ city</p>
+              {/* Add the seller's store address */}
+            </div>
+            <a href="/inventory">
+              <h3>Go to Inventory</h3>
             </a>
-            {/*instead of # add the link to the order history page*/}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default Account;
+export default AccountSeller;
