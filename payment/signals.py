@@ -1,6 +1,8 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from .models import PaymentInfo, UserBalance, Order
+
+from accounts.models import UserBalance
+from .models import PaymentInfo
 
 
 @receiver(pre_save, sender=PaymentInfo)

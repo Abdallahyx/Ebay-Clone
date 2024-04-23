@@ -34,4 +34,19 @@ urlpatterns = [
         ProductVariationsByParentAPIView.as_view(),
         name="product_variations_by_parent",
     ),
+    path(
+        "parent-of-variation-category/",
+        ParentOfVariationCategoryListCreateView.as_view(),
+        name="parent-of-variation-category-list-create",
+    ),
+    path(
+        "variation-category/",
+        VariationCategoryListCreateView.as_view(),
+        name="variation-category-list-create",
+    ),
+    path(
+        "products/<slug:product_slug>/variations/",
+        AssignMultipleProductVariationsView.as_view(),
+        name="assign-variations-to-product",
+    ),
 ]

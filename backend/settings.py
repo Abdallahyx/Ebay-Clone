@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "payment",
     "coupons",
     "stock",
+    "rest_framework_json_api",
 ]
 
 REST_FRAMEWORK = {

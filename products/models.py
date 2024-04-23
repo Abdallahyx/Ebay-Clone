@@ -25,6 +25,9 @@ class Category(MPTTModel):
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
     is_active = models.BooleanField(default=True)
+    photo = models.ImageField(
+        upload_to="images/categories/", verbose_name="Photo", blank=True, null=True
+    )
 
     class MPTTMeta:
         order_insertion_by = ["name"]
@@ -35,86 +38,10 @@ class Category(MPTTModel):
 
     @property
     def get_absolute_url(self):
-        return reverse("products:category_list", args=[self.slug])
+        return reverse("products:category-list", args=[self.slug])
 
     def __str__(self):
         return self.name
-
-
-class ProductDescriptionCategory(models.Model):
-    name = models.CharField(
-        max_length=150, verbose_name="Description category name", unique=True
-    )
-
-    class Meta:
-        verbose_name = "category"
-        verbose_name_plural = "Products descriptions categories"
-
-    def __str__(self):
-        return f"Description category: {self.name}"
-
-
-class ProductDescription(models.Model):
-    description_category = models.ForeignKey(
-        ProductDescriptionCategory,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        verbose_name="Description category",
-    )
-    description = models.TextField(blank=True, null=True, verbose_name="Description")
-
-    class Meta:
-        verbose_name = "description"
-        verbose_name_plural = "Descriptions"
-
-    def __str__(self):
-        return f"Description of: {self.products.name}"
-
-
-class ProductCharacteristicsCategory(models.Model):
-    name = models.CharField(max_length=200, verbose_name="Name", unique=True)
-
-    class Meta:
-        verbose_name = "category"
-        verbose_name_plural = "Characteristics category"
-
-    def __str__(self):
-        return f"Characteristics category: {self.name}"
-
-
-class ProductCharacteristics(models.Model):
-    """
-    Model of characteristics of any product.
-    For example: 'Model: MacBook Air 13 2020' - this is one characteristic.
-    """
-
-    characteristics_category = models.ForeignKey(
-        ProductCharacteristicsCategory,
-        on_delete=models.CASCADE,
-        verbose_name="Category",
-        blank=True,
-        null=True,
-        related_name="characteristics",
-    )
-    product = models.ForeignKey(
-        "Product",
-        on_delete=models.CASCADE,
-        verbose_name="Product",
-        related_name="characteristics",
-        null=False,
-    )
-    name = models.CharField(
-        max_length=150, blank=True, null=True, verbose_name="characteristics name"
-    )
-    value = models.CharField(max_length=200, verbose_name="Value")
-
-    class Meta:
-        verbose_name = "description"
-        verbose_name_plural = "Descriptions"
-
-    def __str__(self):
-        return f"Description of: {self.product.name}"
 
 
 class AvailabilityStatuses:
@@ -145,14 +72,7 @@ class Product(models.Model):
 
     slug = models.SlugField(max_length=255)
     price = models.IntegerField(default=0, verbose_name="Price")
-    description = models.ForeignKey(
-        ProductDescription,
-        on_delete=models.CASCADE,
-        verbose_name="Description",
-        related_name="products",
-        blank=True,
-        null=True,
-    )
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
     photo = models.ImageField(
         upload_to="images/products/", verbose_name="Photo", blank=True, null=True
     )
@@ -166,7 +86,7 @@ class Product(models.Model):
         _("Created at"), auto_now_add=True, editable=False
     )
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
-    availability_status = models.IntegerField(default=1, choices=AVAILABILITY_STATUSES)
+    availability_status = models.IntegerField(default=4, choices=AVAILABILITY_STATUSES)
     rating = models.DecimalField(
         max_digits=2, decimal_places=1, verbose_name="Rating", default=0
     )
@@ -178,7 +98,7 @@ class Product(models.Model):
 
     @property
     def product_link(self):
-        return reverse("products:product_detail", args=[self.slug])
+        return reverse("products:product-detail", args=[self.slug])
 
     @property
     def price_with_discount(self):
@@ -197,7 +117,7 @@ class Product(models.Model):
 
 
 def upload_to(instance, filename):
-    return "images/{filename}".format(filename=filename)
+    return "images/products/{filename}".format(filename=filename)
 
 
 class ProductImage(models.Model):
@@ -223,7 +143,7 @@ class ProductImage(models.Model):
         verbose_name_plural = _("Product Images")
 
     def __str__(self):
-        return self.alt_text if self.alt_text else self.image.url
+        return self.image.url
 
 
 class ParentOfVariationCategory(models.Model):
@@ -262,7 +182,7 @@ class VariationCategory(models.Model):
         blank=True,
         null=True,
         verbose_name="Parent",
-        related_name="child_variation_categories",
+        related_name="variation_categories",
     )
     name = models.CharField(
         max_length=250, verbose_name="Variation category name", unique=True
@@ -284,8 +204,8 @@ class VariationCategory(models.Model):
 
 
 class ProductVariations(models.Model):
-    variation_category = models.ManyToManyField(
-        VariationCategory, verbose_name="Variation category"
+    variation_category = models.ForeignKey(
+        VariationCategory, on_delete=models.CASCADE, verbose_name="Variation category"
     )
     product = models.ForeignKey(
         Product,
@@ -302,7 +222,7 @@ class ProductVariations(models.Model):
         unique_together = ("product", "variation_category")
 
     def __str__(self):
-        return f"Product: {self.product.title}, Variations: {[var.name for var in self.variation_category.all()]}"
+        return f"Variation category: {self.variation_category.name}, Product: {self.product.title}"
 
     @property
     def variation_category_name(self):
@@ -314,4 +234,4 @@ class ProductVariations(models.Model):
 
     @property
     def product_link(self):
-        return reverse("products:product_detail", args=[self.product.slug])
+        return reverse("products:product-detail", args=[self.product.slug])
