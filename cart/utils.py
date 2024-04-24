@@ -18,91 +18,77 @@ from .cart import (
 )
 
 
-def get_product_variation(product, size):
-    # Get the product
-    product = Product.objects.get(id=product)
-
-    # Get the product variation
-    product_variation = ProductVariation.objects.get(product=product, size=size)
-
-    return product_variation
-
-
 class CartOperationTypes:
     cart_add = "add"
     item_add_quantity = "add_quantity"
-    item_minus_quantity = "minus quantity"
+    item_minus_quantity = "minus_quantity"
     cart_clear = "clear"
+
+
+def get_product_variation(product: Product, size: str) -> ProductVariation:
+    """
+    Get the product variation based on product ID and size.
+    """
+    return ProductVariation.objects.get(product=product, size=size)
 
 
 class CartMixin:
     """
-    Mixin which do some operations with
-    session cart or with cart from db and
-    returns data with information about cart.
-
-    Mixin works with two types of cart:
-    Session cart and DB cart.
-
-    If user is not authenticated, this mixin will be
-    working with Session cart, in other case with DB Cart.
+    Mixin to operate with session or DB cart.
     """
 
     operation_type: Optional[str] = None
     __cart: Union[SessionCart, Cart, None] = None
 
-    def _cart_add_item(self, request, product):
+    def _cart_add_item(self, request, product, size):
+        self.reset_cart_option()  # Ensures a new cart session is initialized
+        product_variation = get_product_variation(
+            product, size
+        )  # Fetch the correct variation
+
+        if not request.user.is_authenticated:  # Guest user
+            self.__cart = SessionCart(request)
+            self.__cart.add(product, size)  # Pass the size parameter
+        else:  # Authenticated user
+            self.__cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart_add_item(self.__cart, product, size)  # Pass the size parameter
+
+    def _cart_add_item_quantity(self, request, product, size):
         self.reset_cart_option()
+        product_variation = get_product_variation(product, size)
+
         if not request.user.is_authenticated:
             self.__cart = SessionCart(request)
-            self.__cart.add(product)
-
+            self.__cart.add_quantity(product, size)  # Pass the size parameter
         else:
-            self.__cart, _ = (
-                Cart.objects.prefetch_related("items")
-                .select_related("user")
-                .get_or_create(user=request.user)
-            )
-            cart_add_item(self.__cart, product)
+            self.__cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart_item_add_quantity(
+                self.__cart, product, size
+            )  # Pass the size parameter
 
-    def _cart_add_item_quantity(self, request, product):
+    def _cart_minus_item_quantity(self, request, product, size):
         self.reset_cart_option()
+        product_variation = get_product_variation(product, size)
+
         if not request.user.is_authenticated:
             self.__cart = SessionCart(request)
-            self.__cart.add_quantity(product)
+            self.__cart.minus_quantity(product, size)  # Pass the size parameter
         else:
-            self.__cart, _ = (
-                Cart.objects.prefetch_related("items")
-                .select_related("user")
-                .get_or_create(user=request.user)
-            )
-            cart_item_add_quantity(self.__cart, product)
+            self.__cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart_item_minus_quantity(
+                self.__cart, product, size
+            )  # Pass the size parameter
 
-    def _cart_minus_item_quantity(self, request, product):
+    def _cart_remove_item(self, request, product, size):
         self.reset_cart_option()
+        product_variation = get_product_variation(product, size)
+
         if not request.user.is_authenticated:
             self.__cart = SessionCart(request)
-            self.__cart.minus_quantity(product)
+            self.__cart.remove(product, size)  # Pass the size parameter
         else:
-            self.__cart, _ = (
-                Cart.objects.prefetch_related("items")
-                .select_related("user")
-                .get_or_create(user=request.user)
-            )
-            cart_item_minus_quantity(self.__cart, product)
-
-    def _cart_remove_item(self, request, product):
-        self.reset_cart_option()
-        if not request.user.is_authenticated:
-            self.__cart = SessionCart(request)
-            self.__cart.remove(product)
-        else:
-            self.__cart, _ = (
-                Cart.objects.prefetch_related("items")
-                .select_related("user")
-                .get_or_create(user=request.user)
-            )
-            cart_remove_item(self.__cart, product)
+            self.__cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart_remove_item(self.__cart, product, size)  # Pass the size parameter
 
     def _cart_clear(self, request):
         self.reset_cart_option()
@@ -119,17 +105,7 @@ class CartMixin:
 
     def clear_exist_cart(self, request):
         """
-        We are using this method only if user
-        is authenticated and use of this method
-        is only expected when self.__cart is not
-        None and this is Cart model instance.
-        For example, we are setting self.__cart
-        in method get_cart_data as Cart model
-        instance if user is authenticated.
-
-        The main use of this method is to avoid
-        needlessly accessing the cart table when
-        we are clearing it.
+        Clears existing cart for authenticated users.
         """
         if request.user.is_authenticated:
             clear_cart(self.__cart)
@@ -140,15 +116,7 @@ class CartMixin:
 
     def get_cart_data(self, request):
         """
-        This method checks whether the user is
-        authenticated or not, and based on that,
-        returns either Session Cart or DB Cart data.
-
-        Args:
-            request (Request): The user's request.
-
-        Returns:
-            data (dict): dictionary with information about cart.
+        Retrieves cart data based on authentication status.
         """
         self.reset_cart_option()
         if not request.user.is_authenticated:
@@ -178,32 +146,32 @@ class CartMixin:
             }
         return data
 
-    def cart_operation(self, request, product=None):
+    def cart_operation(self, request, product=None, size=None):
         """
-        This method calls other methods for cart operations
-        depending on the specified operation_type.
-
-        Args:
-            request (Request): The user's request.
-            product (Products): The product on which the operation will be performed.
+        Calls other methods for cart operations based on `operation_type`.
         """
         self.reset_cart_option()
+
         if self.operation_type == CartOperationTypes.cart_add:
-            self._cart_add_item(request, product)
+            self._cart_add_item(request, product, size)
         elif self.operation_type == CartOperationTypes.item_add_quantity:
-            self._cart_add_item_quantity(request, product)
+            self._cart_add_item_quantity(request, product, size)
         elif self.operation_type == CartOperationTypes.item_minus_quantity:
-            self._cart_minus_item_quantity(request, product)
+            self._cart_minus_item_quantity(request, product, size)
         elif self.operation_type == CartOperationTypes.cart_clear:
             self._cart_clear(request)
 
         return self.get_cart_data(request)
 
     def cart_items(self, request):
+        """
+        Yields cart items based on the type of cart used.
+        """
         if not request.user.is_authenticated:
             self.__cart = SessionCart(request)
         else:
             self.__cart, _ = Cart.objects.get_or_create(user=request.user)
+
         for item in self.__cart:
             yield item
 

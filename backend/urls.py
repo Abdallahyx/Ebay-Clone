@@ -38,19 +38,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", include("products.urls")),
-    path("", include("cart.urls")),
-    path(
-        "api/swagger<format>/",
-        schema_view.without_ui(cache_timeout=0),
-        name="schema-json",
-    ),
-    path(
-        "api/swagger/",
-        schema_view.with_ui("swagger", cache_timeout=0),
-        name="schema-swagger-ui",
-    ),
-    path(
-        "api/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
-    ),
+    path("cart/", include("cart.urls")),
+    path("docs/", include("backend.docs_urls")),
     path("orders/", include("orders.urls")),
 ]
