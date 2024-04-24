@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from products.models import Product
+from products.models import Product, ProductVariation
 from accounts.models import User
 
 
@@ -39,6 +39,9 @@ class CartItems(models.Model):
     )
     quantity = models.IntegerField(default=0, verbose_name="Item quantity")
     total_price = models.IntegerField(default=0, verbose_name="Total price of item")
+    product_variation = models.ForeignKey(
+        ProductVariation, on_delete=models.CASCADE, verbose_name="Product Variation"
+    )
 
     class Meta:
         verbose_name = "item"

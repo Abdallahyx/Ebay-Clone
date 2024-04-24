@@ -56,12 +56,6 @@ class Product(models.Model):
     The Product table contining all product items.
     """
 
-    AVAILABILITY_STATUSES = (
-        AvailabilityStatuses.in_stock,
-        AvailabilityStatuses.awaiting_arrival,
-        AvailabilityStatuses.low_in_stock,
-        AvailabilityStatuses.out_of_stock,
-    )
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.RESTRICT)
     title = models.CharField(
@@ -86,7 +80,6 @@ class Product(models.Model):
         _("Created at"), auto_now_add=True, editable=False
     )
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
-    availability_status = models.IntegerField(default=4, choices=AVAILABILITY_STATUSES)
     rating = models.DecimalField(
         max_digits=2, decimal_places=1, verbose_name="Rating", default=0
     )
@@ -146,92 +139,26 @@ class ProductImage(models.Model):
         return self.image.url
 
 
-class ParentOfVariationCategory(models.Model):
-    """
-    This model if for filtering product
-    variations. For example, if product
-    have memory and color variations, you
-    can filter and show only memory variations.
-    """
-
-    name = models.CharField(max_length=255, verbose_name="Name")
-    slug = models.SlugField(unique=True, blank=True, null=True)
-
-    class Meta:
-        verbose_name = "variation parent category"
-        verbose_name_plural = "Parents of variations categories"
-
-    def __str__(self):
-        return f"{self.name} - Parent category"
-
-    def save(self, *args, **kwargs):
-        if self._state.adding and not self.slug:
-            self.slug = slugify(self.name.replace("category", ""))
-        super().save(*args, **kwargs)
-
-
-class VariationCategory(models.Model):
-    """
-    This is model of variations categories.
-    For example: 'Memory 128GB'.
-    """
-
-    parent = models.ForeignKey(
-        ParentOfVariationCategory,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        verbose_name="Parent",
-        related_name="variation_categories",
-    )
-    name = models.CharField(
-        max_length=250, verbose_name="Variation category name", unique=True
-    )
-    value = models.CharField(max_length=200, verbose_name="Value")
-    slug = models.SlugField(unique=True, blank=True, null=True)
-
-    class Meta:
-        verbose_name = "category"
-        verbose_name_plural = "Variations categories"
-
-    def __str__(self):
-        return f"Variation category: {self.name}"
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug != slugify(self.name):
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-
-class ProductVariations(models.Model):
-    variation_category = models.ForeignKey(
-        VariationCategory, on_delete=models.CASCADE, verbose_name="Variation category"
+class ProductVariation(models.Model):
+    AVAILABILITY_STATUSES = (
+        AvailabilityStatuses.in_stock,
+        AvailabilityStatuses.awaiting_arrival,
+        AvailabilityStatuses.low_in_stock,
+        AvailabilityStatuses.out_of_stock,
     )
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        verbose_name="Product",
-        blank=True,
-        null=True,
-        related_name="variations",
+        Product, related_name="variations", on_delete=models.CASCADE
     )
+    size = models.CharField(null=True, max_length=20, blank=True)
+    quantity_in_stock = models.PositiveIntegerField(
+        default=0, verbose_name="Quantity in stock"
+    )
+    quantity_sold = models.PositiveIntegerField(default=0, verbose_name="Quantity sold")
+    stock_date = models.DateTimeField(verbose_name="Stock date", blank=True, null=True)
+    last_sales_date = models.DateTimeField(
+        verbose_name="Last sales date", blank=True, null=True
+    )
+    availability_status = models.IntegerField(default=4, choices=AVAILABILITY_STATUSES)
 
     class Meta:
-        verbose_name = "variation"
-        verbose_name_plural = "Product variations"
-        unique_together = ("product", "variation_category")
-
-    def __str__(self):
-        return f"Variation category: {self.variation_category.name}, Product: {self.product.title}"
-
-    @property
-    def variation_category_name(self):
-        return self.variation_category.name
-
-    @property
-    def product_name(self):
-        return self.product.title
-
-    @property
-    def product_link(self):
-        return reverse("products:product-detail", args=[self.product.slug])
+        unique_together = ["product", "size"]

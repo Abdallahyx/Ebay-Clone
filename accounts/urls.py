@@ -4,22 +4,21 @@ from .views import *
 
 urlpatterns = [
     path(
-        "api/registration/buyer",
+        "registration/customer",
         CustomerRegistrationAPIView.as_view(),
-        name="buyer register",
+        name="customer register",
     ),
     path(
-        "api/registration/store",
+        "registration/store",
         StoreRegistrationAPIView.as_view(),
-        name="seller register",
+        name="store register",
     ),
-    path("api/login/", LoginAPIView.as_view(), name="login"),
-    path("api/logout/", LogoutAPIView.as_view(), name="logout"),
-    path("api/profile/", UserProfileAPIView.as_view(), name="profile"),
+    path("login/", LoginAPIView.as_view(), name="login"),
+    path("logout/", LogoutAPIView.as_view(), name="logout"),
+    path("profile/", UserProfileAPIView.as_view(), name="profile"),
     path(
-        "api/balance/",
+        "balance/",
         UserBalanceAPIView.as_view(),
         name="bonuses_balance",
     ),
-    # path("", include(router.urls)),
 ]

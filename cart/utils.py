@@ -1,4 +1,6 @@
 from typing import Optional, Union
+
+from products.models import Product, ProductVariation
 from .cart import SessionCart
 from .models import Cart
 
@@ -14,6 +16,16 @@ from .cart import (
     cart_remove_item,
     clear_cart,
 )
+
+
+def get_product_variation(product, size):
+    # Get the product
+    product = Product.objects.get(id=product)
+
+    # Get the product variation
+    product_variation = ProductVariation.objects.get(product=product, size=size)
+
+    return product_variation
 
 
 class CartOperationTypes:

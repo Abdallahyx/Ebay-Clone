@@ -15,6 +15,18 @@ class IsNotAuthenticated(permissions.BasePermission):
         return bool(not request.user.is_authenticated)
 
 
+class IsNotAuthenticatedOrIsCustomer(permissions.BasePermission):
+    """
+    Custom permission to allow access to unauthenticated users or customers
+    """
+
+    def has_permission(self, request, view):
+        return not request.user.is_authenticated or (
+            request.user.groups.filter(name="Customers").exists()
+            and not request.user.groups.filter(name="Stores").exists()
+        )
+
+
 class IsStore(permissions.BasePermission):
     """
     Custom permission to only allow sellers to access the view
