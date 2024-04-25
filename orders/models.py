@@ -1,6 +1,6 @@
 from django.db import models
 from coupons.models import UserCoupons
-from products.models import Product
+from products.models import Product, ProductVariation
 from accounts.models import Store, UserShippingInfo, User
 
 
@@ -83,6 +83,9 @@ class OrderItems(models.Model):
         verbose_name="Store",
         related_name="orders",
     )
+    product_variation = models.ForeignKey(
+        ProductVariation, on_delete=models.CASCADE, verbose_name="Product Variation"
+    )
 
     class Meta:
         verbose_name = "item"
@@ -90,4 +93,4 @@ class OrderItems(models.Model):
         ordering = ["total_price"]
 
     def __str__(self):
-        return f"Item: {self.product.title}, Order: {self.order}"
+        return f"Item: {self.product.title} Size: {self.product_variation.size}, Order: {self.order}"

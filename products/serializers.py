@@ -18,6 +18,29 @@ class ImageSerializer(serializers.ModelSerializer):
         ]
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["name", "slug"]
+
+
+class ProductBaseSerializer(serializers.ModelSerializer):
+    price_with_discount = serializers.ReadOnlyField()  # this is model property
+    category = serializers.CharField(source="category.name")  # category name
+
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "title",
+            "category",
+            "price",
+            "price_with_discount",
+            "photo",
+            "discount",
+        ]
+
+
 class ProductVariationSerializer(serializers.ModelSerializer):
     availability_status = serializers.SerializerMethodField()
 
@@ -129,9 +152,3 @@ class ProductSerializer(serializers.ModelSerializer):
                 ProductVariation.objects.create(product=instance, **variation_data)
 
         return instance
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ["name", "slug"]
