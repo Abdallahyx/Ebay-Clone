@@ -164,7 +164,7 @@ class OrderMixin(CartMixin):
         response.data["order_items"] = self.items_serializer(
             instance=order_items, many=True
         ).data
-
+        self.clear_exist_cart(self.request)
         return response
 
     def get_user_shipping_info(self, shipping_info_data: dict) -> UserShippingInfo:

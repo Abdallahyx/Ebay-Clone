@@ -12,8 +12,8 @@ load_dotenv()
 client = paypalrestsdk.configure(
     {
         "mode": "sandbox",
-        "client_id": "AWGcvm6QY9jsoLnp55Y9bQU6gxTbGHQmnYpI8vJ4VRSXMSjiAvTY5jBWThqJtu4yZDTI2L-4bBskfF7W",
-        "client_secret": "EDr6HnE2tFyHV5ehaLvL3X5hfbCHMbj2uwExt6XB5u1SE2ZowcDVK1aqeYtx_-BbyaNC5G0NPFq399zw",
+        "client_id": "AcNA5CodSwSEWwYV5XAoECOFVBm0siHavn4Xkm9Rza3uGEx3jaW14bQpDnsb5VBFWz0Bgj-qBzDVX04d",
+        "client_secret": "EGo2fGvqdenNEgd94_6ssmQ8hFw4G-a6XweFL4Y77oMYHJQ8saOXX_3atldBoaqFhUu7kJPEwUETMUw4",
     }
 )
 
@@ -37,8 +37,8 @@ def get_paypal_access_token(client_id, client_secret):
 
 
 access_token = get_paypal_access_token(
-    "AWGcvm6QY9jsoLnp55Y9bQU6gxTbGHQmnYpI8vJ4VRSXMSjiAvTY5jBWThqJtu4yZDTI2L-4bBskfF7W",
-    "EDr6HnE2tFyHV5ehaLvL3X5hfbCHMbj2uwExt6XB5u1SE2ZowcDVK1aqeYtx_-BbyaNC5G0NPFq399zw",
+    "AcNA5CodSwSEWwYV5XAoECOFVBm0siHavn4Xkm9Rza3uGEx3jaW14bQpDnsb5VBFWz0Bgj-qBzDVX04d",
+    "EGo2fGvqdenNEgd94_6ssmQ8hFw4G-a6XweFL4Y77oMYHJQ8saOXX_3atldBoaqFhUu7kJPEwUETMUw4",
 )
 
 
@@ -55,8 +55,8 @@ def paypal_create_order(value, order_id):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:8000/api/v1/orders/order/{order_id}",
-                "cancel_url": f"http://127.0.0.1:8000/api/v1/orders/order/{order_id}",
+                "return_url": f"http://127.0.0.1:8000/orders/order/{order_id}",
+                "cancel_url": f"http://127.0.0.1:8000/orders/order/{order_id}",
             },
         }
     )

@@ -72,35 +72,47 @@ class OrderAPIView(OrderMixin, ListCreateAPIView):
         )  # Process the order creation with additional checks
 
 
-# class OrderPaypalPaymentComplete(OrderMixin, APIView):
-#     permission_classes = [IsCustomer]
+class OrderPaypalPaymentComplete(OrderMixin, APIView):
+    permission_classes = [IsCustomer]
+    permission_classes = [
+        IsAuthenticated,
+        IsCustomer,
+    ]  # Only authenticated users with `IsCustomer` permission
+    authentication_classes = [
+        SessionAuthentication,
+        CustomTokenAuthentication,
+    ]  # Auth classes
 
-#     def get(self, *args, **kwargs):
-#         mixin = OrderMixin()
-#         order_id = kwargs["order_id"]
-#         payment_id = self.request.query_params.get("paymentId")
-#         payer_id = self.request.query_params.get("PayerID")
-#         if paypal_complete_payment(payment_id, payer_id):
-#             try:
-#                 order = Order.objects.get(id=order_id)
-#             except (Exception,):
-#                 return Response({"error": "Order error."})
-#             order.payment_info.is_paid = True
-#             order.payment_info.save()
+    def get(self, *args, **kwargs):
+        mixin = OrderMixin()
+        order_id = kwargs["order_id"]
+        payment_id = self.request.query_params.get("paymentId")
+        payer_id = self.request.query_params.get("PayerID")
+        if paypal_complete_payment(payment_id, payer_id):
+            try:
+                order = Order.objects.get(id=order_id)
+            except (Exception,):
+                return Response({"error": "Order error."})
+            order.payment_info.is_paid = True
+            order.payment_info.save()
 
-#             if self.request.user.is_authenticated:
-#                 coupons = None
-#                 for item in order.items.all():
-#                     item_coupons = find_coupons(item)
-#                     if item_coupons.coupons:
-#                         coupons = item_coupons.coupons
-#                 for coupon in coupons:
-#                     if get_coupon(coupon):
-#                         UserCoupons.objects.create(
-#                             coupon=coupon, user=self.request.user
-#                         )
-#                 self.process_order_payment_with_bonuses(order)
-#         return Response({"success": "You successfully paid for order!"})
+            if self.request.user.is_authenticated:
+                coupons = []  # Initialize coupons as an empty list
+                for item in order.items.all():
+                    item_coupons = find_coupons(item)
+                    if item_coupons.coupons:
+                        coupons = item_coupons.coupons
+                for (
+                    coupon
+                ) in (
+                    coupons
+                ):  # This will not raise an error if coupons is an empty list
+                    if get_coupon(coupon):
+                        UserCoupons.objects.create(
+                            coupon=coupon, user=self.request.user
+                        )
+                self.process_order_payment_with_balance(order)
+        return Response({"success": "You successfully paid for order!"})
 
 
 # class OrdersViewSet(

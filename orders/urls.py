@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import OrderAPIView
+from .views import OrderAPIView, OrderPaypalPaymentComplete
 from rest_framework.routers import DefaultRouter
 
 # router = DefaultRouter()
@@ -7,10 +7,10 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path("checkout/", OrderAPIView.as_view(), name="checkout"),
-    # path(
-    #     "order/<int:order_id>/",
-    #     OrderPaypalPaymentComplete.as_view(),
-    #     name="order_payment_complete",
-    # ),
+    path(
+        "order/<int:order_id>/",
+        OrderPaypalPaymentComplete.as_view(),
+        name="order_payment_complete",
+    ),
     # path("", include(router.urls)),
 ]
