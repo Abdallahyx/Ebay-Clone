@@ -62,7 +62,7 @@ ul a:hover::after {
 {
   width: 100%;
 }
-.cartcount .count
+.cartcount .countttt
 {
   position:absolute;
   bottom: 75%;
@@ -74,8 +74,9 @@ ul a:hover::after {
   justify-content: center;
   align-items: center;
 }
-.cartcount .count p
+.cartcount .countttt p
 {
+  margin-top: 2px;
   color: white;
   font-weight: 300;
   font-size: 10px;

@@ -94,7 +94,7 @@ function Nav(props) {
           />
           {
             props.count > 0 ?
-          <div className="count"><p>{props.count}</p></div>
+          <div className="countttt"><p>{props.count}</p></div>
           : null
           }
           </div>

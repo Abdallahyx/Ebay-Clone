@@ -3,6 +3,8 @@ import cart from "../SVGs/cart.svg";
 import heart from "../SVGs/heart.svg";
 import hearthover from "../SVGs/heartwhite.svg";
 import carthover from "../SVGs/cartwhite.svg";
+import view from "../SVGs/View.svg";
+import viewh from "../SVGs/Viewh.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +31,13 @@ function Product(product) {
   const handleMouseLeaveHeart = () => {
     sethoverh(false);
   };
+  const [hoverv, sethoverv] = useState(false);
+  const handleMouseEnterView = () => {
+    sethoverv(true);
+  };
+  const handleMouseLeaveView = () => {
+    sethoverv(false);
+  };
 
   const productID = 123;
 
@@ -42,7 +51,7 @@ function Product(product) {
     : "Productitem";
   return (
     <div className={combinedClassName}>
-      <div className="Image" onClick={handleImageClick}>
+      <div className="Image" >
         {" "}
         {/* Attach click handler to the whole image container */}
         <img src={product.image} alt={product.name} />
@@ -64,6 +73,18 @@ function Product(product) {
             className="image2"
           >
             <img src={hoverh ? hearthover : heart} alt="add to wishlist" />
+            </div>
+            <div
+            onMouseEnter={handleMouseEnterView}
+            onMouseLeave={handleMouseLeaveView}
+            className="image2"
+          >
+            <img
+              onClick={handleImageClick}
+              src={hoverv ? viewh : view}
+              alt="viewProduct"
+            />
+          
           </div>
         </div>
       </div>
