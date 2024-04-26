@@ -156,6 +156,7 @@ class OrderMixin(CartMixin):
         order.total_amount = total_amount
         print(total_amount)  # Assign total_amount back to the order
         order.save()
+        create_payment_info(order)
         if response.data["payment_method"] == Order.PAYMENT_METHODS[2][0]:
             # If the payment method is by card, add a PayPal payment link
             response.data["payment_link"] = paypal_create_order(total_amount, order_id)
@@ -166,7 +167,6 @@ class OrderMixin(CartMixin):
         response.data["order_items"] = self.items_serializer(
             instance=order_items, many=True
         ).data
-        create_payment_info(order)
 
         self.clear_exist_cart(self.request)
         return response
