@@ -15,7 +15,7 @@ class CustomerTransactionListCreateView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return CustomerTransaction.objects.filter(user=user)
+        return CustomerTransaction.objects.filter(user=user).order_by("created_at")
 
 
 class StoreTransactionListCreateView(generics.ListAPIView):
@@ -26,4 +26,4 @@ class StoreTransactionListCreateView(generics.ListAPIView):
 
     def get_queryset(self):
         store = self.request.user.store_info
-        return StoreTransaction.objects.filter(store=store)
+        return StoreTransaction.objects.filter(store=store).order_by("created_at")
