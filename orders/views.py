@@ -98,21 +98,19 @@ class OrderPaypalPaymentComplete(OrderMixin, APIView):
             order.payment_info.is_paid = True
             order.payment_info.save()
 
-            if self.request.user.is_authenticated:
-                coupons = []  # Initialize coupons as an empty list
-                for item in order.items.all():
-                    item_coupons = find_coupons(item)
-                    if item_coupons.coupons:
-                        coupons = item_coupons.coupons
-                for (
-                    coupon
-                ) in (
-                    coupons
-                ):  # This will not raise an error if coupons is an empty list
-                    if get_coupon(coupon):
-                        UserCoupons.objects.create(
-                            coupon=coupon, user=self.request.user
-                        )
+            coupons = []  # Initialize coupons as an empty list
+            for item in order.items.all():
+                item_coupons = find_coupons(item)
+                if item_coupons.coupons:
+                    coupons = item_coupons.coupons
+            for (
+                coupon
+            ) in coupons:  # This will not raise an error if coupons is an empty list
+                if get_coupon(coupon):
+                    UserCoupons.objects.create(coupon=coupon, user=self.request.user)
+            order.payment_info.total_amount = order.total_amount
+            order.payment_info.save()
+
         return Response({"success": "You successfully paid for order!"})
 
 

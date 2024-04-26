@@ -114,7 +114,8 @@ class OrderSerializer(OrderMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get("request", None)
-
+        total_amount = validated_data.get("total_amount", 0)
+        print(total_amount)
         shipping_info = UserShippingInfo.objects.filter(user=request.user).first()
         if not shipping_info:
             raise serializers.ValidationError("Shipping information is required.")
@@ -126,7 +127,6 @@ class OrderSerializer(OrderMixin, serializers.ModelSerializer):
             shipping_info=shipping_info, user=request.user, **validated_data
         )
 
-        create_payment_info(order)
         return order
 
 

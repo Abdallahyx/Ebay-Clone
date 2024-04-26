@@ -58,8 +58,8 @@ def paypal_create_order(value, order_id):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:8000/orders/order/{order_id}",
-                "cancel_url": f"http://127.0.0.1:8000/orders/order/{order_id}",
+                "return_url": f"http://127.0.0.1:8000/orders/order/{order_id}/",
+                "cancel_url": f"http://127.0.0.1:8000/orders/order/{order_id}/",
             },
         }
     )
@@ -82,6 +82,7 @@ def paypal_complete_payment(payment_id, payer_id):
 
 
 def create_payment_info(order: Order, is_paid=False):
+
     if not is_paid:
         info = PaymentInfo.objects.create(
             order=order,

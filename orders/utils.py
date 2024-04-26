@@ -1,5 +1,5 @@
 from cart.utils import CartMixin, CartOperationTypes
-from payment.services import paypal_create_order
+from payment.services import create_payment_info, paypal_create_order
 from .models import OrderItems, Order
 from accounts.models import UserShippingInfo
 from products.models import ProductVariation, AvailabilityStatuses
@@ -153,7 +153,8 @@ class OrderMixin(CartMixin):
         total_amount = order_items.aggregate(total_amount=Sum("total_price"))[
             "total_amount"
         ]
-        order.total_amount = total_amount  # Assign total_amount back to the order
+        order.total_amount = total_amount
+        print(total_amount)  # Assign total_amount back to the order
         order.save()
         if response.data["payment_method"] == Order.PAYMENT_METHODS[2][0]:
             # If the payment method is by card, add a PayPal payment link
@@ -165,6 +166,8 @@ class OrderMixin(CartMixin):
         response.data["order_items"] = self.items_serializer(
             instance=order_items, many=True
         ).data
+        create_payment_info(order)
+
         self.clear_exist_cart(self.request)
         return response
 
