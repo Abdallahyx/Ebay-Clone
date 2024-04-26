@@ -32,3 +32,6 @@ class PaymentInfo(models.Model):
 
     def __str__(self):
         return f"Payment info order id:{self.order_id}"
+
+    def get_payment_method(self):
+        return self.get_payment_method_display()

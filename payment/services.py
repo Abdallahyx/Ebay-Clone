@@ -4,8 +4,11 @@ import os
 import paypalrestsdk
 from dotenv import load_dotenv
 from django.utils import timezone
+from accounts.models import UserBalance
 from orders.models import Order
 from .models import PaymentInfo
+from django.db.models import F
+from decimal import Decimal
 
 load_dotenv()
 
@@ -97,4 +100,33 @@ def create_payment_info(order: Order, is_paid=False):
             payment_date=timezone.now(),
             is_paid=True,
         )
+
     return info
+
+
+def paypal_add_balance(value):
+    payment_url = None
+    payment = paypalrestsdk.Payment(
+        {
+            "intent": "sale",
+            "payer": {"payment_method": "paypal"},
+            "transactions": [
+                {
+                    "amount": {"total": str(value), "currency": "USD"},
+                    "description": f"Add balance to your account.",
+                }
+            ],
+            "redirect_urls": {
+                "return_url": f"http://127.0.0.1:8000/payment/execute",
+                "cancel_url": f"http://127.0.0.1:8000/payment/cancel",
+            },
+        }
+    )
+
+    if payment.create():
+        for link in payment.links:
+            if link.rel == "approval_url":
+                payment_url = link.href
+    else:
+        return payment.error
+    return payment_url
