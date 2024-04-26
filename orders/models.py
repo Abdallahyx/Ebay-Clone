@@ -15,9 +15,8 @@ class Order(models.Model):
     )
     PAYMENT_METHODS = (
         (1, "By cash"),
-        (2, "By card"),
-        (3, "By balance"),
-        (4, "By Paypal"),
+        (2, "By balance"),
+        (3, "By Paypal"),
     )
 
     user = models.ForeignKey(
@@ -28,8 +27,7 @@ class Order(models.Model):
         blank=True,
         null=True,
     )
-    session_id = models.CharField(max_length=32, blank=True, null=True)
-    order_id = models.CharField(max_length=7, blank=True, null=True)
+
     order_status = models.IntegerField(
         verbose_name="Order status", choices=ORDER_STATUSES, default=1
     )

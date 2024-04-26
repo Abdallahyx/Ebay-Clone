@@ -16,6 +16,7 @@ from coupons.models import UserCoupons
 from coupons.services import get_coupon
 from coupons.utils import find_coupons
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 
 class OrderAPIView(OrderMixin, ListCreateAPIView):
@@ -53,14 +54,15 @@ class OrderAPIView(OrderMixin, ListCreateAPIView):
         """
         if not request.user.is_authenticated:
             return Response(
-                {"error": "You must be authenticated to create an order."}, status=403
+                {"error": "You must be authenticated to create an order."},
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         # Check if user has a shipping address
         if not request.user.shipping_info:
             return Response(
                 {"error": "Please add a shipping address before creating an order."},
-                status=400,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         # Call the super class to create the order
@@ -111,7 +113,6 @@ class OrderPaypalPaymentComplete(OrderMixin, APIView):
                         UserCoupons.objects.create(
                             coupon=coupon, user=self.request.user
                         )
-                self.process_order_payment_with_balance(order)
         return Response({"success": "You successfully paid for order!"})
 
 

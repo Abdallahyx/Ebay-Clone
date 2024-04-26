@@ -91,6 +91,7 @@ class OrderSerializer(OrderMixin, serializers.ModelSerializer):
         fields = (
             "id",
             "shipping_info",
+            "activate_balance",
             "payment_method",
             "coupon",
             "comment",

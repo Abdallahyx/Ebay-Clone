@@ -53,9 +53,8 @@ INSTALLED_APPS = [
     "orders",
     "payment",
     "coupons",
-    "stock",
-    "rest_framework_json_api",
     "django_filters",
+    "transactions",
 ]
 
 REST_FRAMEWORK = {

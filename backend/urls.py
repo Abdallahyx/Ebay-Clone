@@ -42,4 +42,5 @@ urlpatterns = [
     path("docs/", include("backend.docs_urls")),
     path("orders/", include("orders.urls")),
     path("payments/", include("payment.urls")),
+    path("transactions/", include("transactions.urls")),
 ]

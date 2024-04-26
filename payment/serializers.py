@@ -29,3 +29,7 @@ class PaymentInfoSerializer(serializers.ModelSerializer):
 
     def get_payment_method(self, obj):
         return obj.get_payment_method()
+
+
+class PayPalAddBalanceSerializer(serializers.Serializer):
+    value = serializers.DecimalField(max_digits=10, decimal_places=2)

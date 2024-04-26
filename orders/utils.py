@@ -8,6 +8,8 @@ from django.db.models import Sum
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from .services import draw_pdf_invoice
+from rest_framework import status
+from django.core.exceptions import ValidationError
 
 
 class OrderMixin(CartMixin):
@@ -76,10 +78,8 @@ class OrderMixin(CartMixin):
 
                 payment_info.payment_amount = order_total_amount
                 payment_info.save()
-            elif order_total_amount > user_balance > 0:
-                order.user.balance.balance = 0
-                order.user.balance.save()
-                order_total_amount -= user_balance
+            else:
+                raise ValidationError("Insufficient balance")
 
         order.total_amount = order_total_amount
         order.save()
@@ -93,7 +93,7 @@ class OrderMixin(CartMixin):
         if not self.request.user.is_authenticated:
             return Response(
                 {"error": "Only authenticated users can create orders."},
-                status=403,
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         cart_data = self.get_cart_data(self.request)
@@ -102,7 +102,7 @@ class OrderMixin(CartMixin):
         if not_available_cart_variations:
             return Response(
                 {"error": "Some product variations in your cart are not available."},
-                status=400,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not cart_data["items"]:
@@ -117,7 +117,7 @@ class OrderMixin(CartMixin):
         if not shipping_info:
             return Response(
                 {"error": "Valid shipping information is required."},
-                status=400,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         order_id = response.data["id"]
@@ -153,8 +153,9 @@ class OrderMixin(CartMixin):
         total_amount = order_items.aggregate(total_amount=Sum("total_price"))[
             "total_amount"
         ]
-
-        if response.data["payment_method"] == Order.PAYMENT_METHODS[3][0]:
+        order.total_amount = total_amount  # Assign total_amount back to the order
+        order.save()
+        if response.data["payment_method"] == Order.PAYMENT_METHODS[2][0]:
             # If the payment method is by card, add a PayPal payment link
             response.data["payment_link"] = paypal_create_order(total_amount, order_id)
         else:

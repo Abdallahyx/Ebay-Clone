@@ -117,8 +117,8 @@ def paypal_add_balance(value):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:8000/payment/execute",
-                "cancel_url": f"http://127.0.0.1:8000/payment/cancel",
+                "return_url": f"http://127.0.0.1:8000/payments/user/add-balance/complete/?value={str(value)}",
+                "cancel_url": f"http://127.0.0.1:8000/accounts/profile/",
             },
         }
     )
