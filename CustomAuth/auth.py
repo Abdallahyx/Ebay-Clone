@@ -23,4 +23,4 @@ class CustomTokenAuthentication(TokenAuthentication):
             msg = _("Invalid token header. Token string should not contain spaces.")
             raise AuthenticationFailed(msg)
 
-        return self.authenticate_credentials(auth[1])
+        return self.authenticate_credentials(auth[1].decode("utf-8"))
