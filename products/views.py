@@ -130,6 +130,7 @@ class ProductDeleteView(generics.DestroyAPIView):
     lookup_field = "slug"
 
     def perform_destroy(self, instance):
-        # Delete the images associated with the product
-        instance.product_image.all().delete()
+        if instance.product_images.exists():
+            # Delete the images associated with the product
+            instance.product_images.all().delete()
         instance.delete()

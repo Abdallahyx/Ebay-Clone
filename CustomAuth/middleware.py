@@ -9,7 +9,11 @@ class TokenCookieMiddleware:
         response = self.get_response(request)
 
         # Check if the response is a DRF Response and contains a token
-        if isinstance(response, Response) and "token" in response.data:
+        if (
+            isinstance(response, Response)
+            and response.data is not None
+            and "token" in response.data
+        ):
             # Set the token as a cookie
             response.set_cookie("token", response.data["token"])
 
