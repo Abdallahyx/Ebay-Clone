@@ -23,7 +23,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["name", "slug"]
+        fields = ["id", "name", "slug"]
 
 
 class ProductBaseSerializer(serializers.ModelSerializer):
@@ -96,14 +96,20 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         # If the input is a QueryDict (as it will be for multipart form data),
-        # convert it into a standard dictionary
+        # handle it directly without converting to a standard dictionary
         if isinstance(data, QueryDict):
-            data = data.dict()
-
-        # If variations is a string (as it will be for multipart form data),
-        # parse it into a list
-        if isinstance(data.get("variations"), str):
-            data["variations"] = json.loads(data["variations"])
+            # If variations is a list of strings (as it will be if each object was stringified),
+            # parse each string into a dictionary
+            if "variations" in data:
+                data = {
+                    **data.dict(),
+                    "variations": [
+                        json.loads(variation)
+                        for variation in data.getlist("variations")
+                    ],
+                }
+            else:
+                data = data.dict()
 
         return super().to_internal_value(data)
 

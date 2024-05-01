@@ -59,8 +59,6 @@ class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     pagination_class = PageNumberPagination
-    permission_classes = [IsNotAuthenticatedOrIsCustomer]
-    authentication_classes = [CustomTokenAuthentication]
 
 
 class CategoryItemView(generics.ListAPIView):
