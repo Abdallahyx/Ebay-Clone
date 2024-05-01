@@ -58,29 +58,29 @@ function MainPage(props) {
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          image={product1}
-          name={"Ribbed modal T-shirt"}
+          img={product1}
+          title={"Ribbed modal T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          image={product2}
-          name={"Oversized Motif T-shirt"}
+          img={product2}
+          title={"Oversized Motif T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          image={product3}
-          name={"Oversized Printed T-shirt"}
+          img={product3}
+          title={"Oversized Printed T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          image={product4}
-          name={"Oversized Smiling T-shirt"}
+          img={product4}
+          title={"Oversized Smiling T-shirt"}
           price={"$" + 18.0}
         />
       </div>

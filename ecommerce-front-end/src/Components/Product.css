@@ -3,6 +3,9 @@
     margin: 10px;
     display: flex;
     flex-direction: column;
+    min-width: 250px; /* Set a minimum width */
+    max-width: 300px; /* Optionally, set a maximum width */
+    width: 100%; /* Ensure it takes up full width of its container */
 }
 
 .Productitem .Image {
@@ -35,7 +38,6 @@
     justify-content: center;
     align-items:flex-end;
     cursor: pointer;
-    
 }
 
 .Productitem .Image:hover .overlay {
@@ -54,20 +56,21 @@
 
 .Productitem h3 {
     font-weight: normal;
+    margin-top: 10px; /* Add some top margin */
 }
 
 .Price {
     font-weight: 500;
 }
-.overlay img
-{
-    transition: 0.3s ease;
 
+.overlay img {
+    transition: 0.3s ease;
     width: 30px;
- 
 }
-.image1,.image2,.image3
-{
+
+.image1, .image2, .image3 {
+    margin: 5px;
+
     transition: 0.3s ease;
     border-radius: 3px;
     display: flex;
@@ -76,13 +79,10 @@
     background-color: white;
     width:50px;
     height:50px;
-    margin-bottom: 40px;
-    margin-right:10px;
-    margin-left: 10px;
+    margin-bottom: 50px; /* Reduced margin */
 }
-.image1:hover,.image2:hover
-{
+
+.image1:hover, .image2:hover {
     transition: 0.3s ease;
     background-color: black;
 }
-

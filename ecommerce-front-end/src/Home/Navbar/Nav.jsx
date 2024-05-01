@@ -7,15 +7,40 @@ import carthover from "../../SVGs/carthover.svg";
 import Logo from "../../SVGs/Logo.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "./Nav.css";
 
 function Nav(props) {
-
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
-  const submitHandler = () => {
-    navigate("/account");
+  const submitHandler = async () => {
+    if (!token) {
+      navigate("/login");
+      console.log(token);
+    } else {
+      const response = await fetch("http://127.0.0.1:8000/accounts/profile/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      console.log(response);
+      console.log(data.shipping_info);
+      if (!response.ok) {
+        navigate("/login");
+      } else {
+        if (data.shipping_info === null) {
+          console.log("seller")
+          navigate("/selleraccount");
+          console.log(data)
+        } else {
+          console.log("buyer")
+          navigate("/account");
+        }
+      }
+    }
   };
   const [hovercart, sethovercart] = useState(false);
   const handleMouseEnterCart = () => {
@@ -67,8 +92,8 @@ function Nav(props) {
           </ul>
         </div>
         <div className="icons">
-          <img 
-           className="normalicons"
+          <img
+            className="normalicons"
             onMouseEnter={handleMouseEnterContact}
             onMouseLeave={handleMouseLeaveContact}
             onClick={submitHandler}
@@ -76,27 +101,29 @@ function Nav(props) {
             alt="contact"
           />
           <img
-          className="normalicons"
+            className="normalicons"
             onMouseEnter={handleMouseEnterHeart}
             onMouseLeave={handleMouseLeaveHeart}
             src={hoverh ? hearthover : heart}
             alt="heart"
           />
 
-         <div 
+          <div
             onMouseEnter={handleMouseEnterCart}
             onMouseLeave={handleMouseLeaveCart}
-            className="cartcount"> <img
-         
-            src={hovercart ? carthover : cart}
-            onClick={() => navigate("/cart")}
-            alt="cart"
-          />
-          {
-            props.count > 0 ?
-          <div className="countttt"><p>{props.count}</p></div>
-          : null
-          }
+            className="cartcount"
+          >
+            {" "}
+            <img
+              src={hovercart ? carthover : cart}
+              onClick={() => navigate("/cart")}
+              alt="cart"
+            />
+            {props.count > 0 ? (
+              <div className="countttt">
+                <p>{props.count}</p>
+              </div>
+            ) : null}
           </div>
         </div>
       </nav>

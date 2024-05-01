@@ -48,13 +48,13 @@ function Product(product) {
 
   const combinedClassName = product.className
     ? `Productitem ${product.className}`
-    : "Productitem";
+    : "Productitem shopPageProduct";
   return (
     <div className={combinedClassName}>
       <div className="Image" >
         {" "}
         {/* Attach click handler to the whole image container */}
-        <img src={product.image} alt={product.name} />
+        <img src="https://cdn.shortpixel.ai/spai/q_glossy+ret_img+to_webp/mobizil.com/wp-content/uploads/2023/09/iPhone-15-3.jpg" alt={product.title} />
         <div className="overlay">
           <div
             onMouseEnter={handleMouseEnterCart}
@@ -88,7 +88,7 @@ function Product(product) {
           </div>
         </div>
       </div>
-      <h3>{product.name}</h3>
+      <h3>{product.title}</h3>
       <div className="Price">
         <p>
           <s>$30.00</s> From {product.price}.00

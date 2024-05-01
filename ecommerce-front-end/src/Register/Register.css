@@ -76,7 +76,11 @@
     border: 1px solid black;
   }
 
-
+  .border p
+  {
+    color: red;
+    font-size: 12px;
+  }
 
 
  
