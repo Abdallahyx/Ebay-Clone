@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.http import QueryDict
+import json
 
 from .models import (
     AvailabilityStatuses,
@@ -91,6 +93,19 @@ class ProductSerializer(serializers.ModelSerializer):
             "product_images",
             "variations",
         ]
+
+    def to_internal_value(self, data):
+        # If the input is a QueryDict (as it will be for multipart form data),
+        # convert it into a standard dictionary
+        if isinstance(data, QueryDict):
+            data = data.dict()
+
+        # If variations is a string (as it will be for multipart form data),
+        # parse it into a list
+        if isinstance(data.get("variations"), str):
+            data["variations"] = json.loads(data["variations"])
+
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         images_data = validated_data.pop("product_images", [])
