@@ -193,7 +193,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     )
     phone_number = serializers.CharField(required=False)  # new field
     balance = serializers.FloatField(source="balance.balance", read_only=True)
-    shipping_info = ShippingInfoSerializer()
+    shipping_info = ShippingInfoSerializer(required=False)
+    store_info = StoreInfoSerializer(required=False)
 
     class Meta:
         model = User
@@ -206,16 +207,28 @@ class ProfileSerializer(serializers.ModelSerializer):
             "phone_number",
             "balance",
             "shipping_info",
+            "store_info",
         )
 
     def update(self, instance, validated_data):
         shipping_info_data = validated_data.pop("shipping_info", None)
+        store_info_data = validated_data.pop("store_info", None)
+
         instance = super().update(instance, validated_data)
 
-        if shipping_info_data is not None:
-            UserShippingInfo.objects.update_or_create(
-                user=instance, defaults=shipping_info_data
+        if shipping_info_data and hasattr(instance, "shipping_info"):
+            shipping_info_serializer = ShippingInfoSerializer(
+                instance.shipping_info, data=shipping_info_data, partial=True
             )
+            if shipping_info_serializer.is_valid(raise_exception=True):
+                shipping_info_serializer.save()
+
+        if store_info_data and hasattr(instance, "store_info"):
+            store_info_serializer = StoreInfoSerializer(
+                instance.store_info, data=store_info_data, partial=True
+            )
+            if store_info_serializer.is_valid(raise_exception=True):
+                store_info_serializer.save()
 
         return instance
 
