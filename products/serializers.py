@@ -16,6 +16,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = [
+            "id",
             "image",
         ]
 
@@ -49,6 +50,7 @@ class ProductVariationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariation
         fields = [
+            "id",
             "size",
             "quantity_in_stock",
             "quantity_sold",
@@ -138,16 +140,18 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get("description", instance.description)
         instance.photo = validated_data.get("photo", instance.photo)
         instance.discount = validated_data.get("discount", instance.discount)
-        instance.rating = validated_data.get("rating", instance.rating)
-
-        instance.save()
 
         # Update or create product images
         images_data = validated_data.pop("product_images", [])
         for image_data in images_data:
-            image_id = image_data.get("id", None)
-            if image_id:
-                image_instance = ProductImage.objects.get(id=image_id)
+            image_im = image_data.get("image", None)
+            image = ProductVariation.objects.filter(
+                product=instance, image=image_im
+            ).exists()
+            if image:
+                image_instance = ProductImage.objects.get(
+                    product=instance, image=image_im
+                )
                 image_instance.image = image_data.get("image", image_instance.image)
                 image_instance.is_featured = image_data.get(
                     "is_featured", image_instance.is_featured
@@ -159,9 +163,14 @@ class ProductSerializer(serializers.ModelSerializer):
         # Update or create product variations
         variations_data = validated_data.pop("variations", [])
         for variation_data in variations_data:
-            variation_id = variation_data.get("id", None)
-            if variation_id:
-                variation_instance = ProductVariation.objects.get(id=variation_id)
+            size = variation_data.get("size", None)
+            variation = ProductVariation.objects.filter(
+                product=instance, size=size
+            ).exists()
+            if variation:
+                variation_instance = ProductVariation.objects.get(
+                    product=instance, size=size
+                )
                 variation_instance.size = variation_data.get(
                     "size", variation_instance.size
                 )
@@ -171,5 +180,6 @@ class ProductSerializer(serializers.ModelSerializer):
                 variation_instance.save()
             else:
                 ProductVariation.objects.create(product=instance, **variation_data)
+        instance.save()
 
         return instance
