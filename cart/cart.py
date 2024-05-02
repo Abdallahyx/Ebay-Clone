@@ -15,14 +15,18 @@ class SessionCart:
         self.session[settings.CART_SESSION] = self.cart
         self.session.modified = True
 
+    def get_product_variation(self, product):
+        product_variation_id = self.cart[str(product.id)]["product_variation_id"]
+        return ProductVariation.objects.get(id=product_variation_id)
+
     def add(self, product, size):
         product_variation = ProductVariation.objects.get(product=product, size=size)
-        product_variation_key = f"{product.slug}-{product_variation.size}"
+        product_variation_key = f"{product.slug}-{size}"
 
         if product_variation_key not in self.cart:
             self.cart[product_variation_key] = {
-                "product": product,
-                "variation": product_variation,
+                "product_id": product.id,
+                "variation_id": product_variation.id,
                 "quantity": 1,
                 "price": product.price,
                 "price_with_discount": product.price_with_discount,

@@ -1,4 +1,4 @@
-from accounts.permissions import IsCustomer
+from accounts.permissions import IsCustomer, IsNotAuthenticatedOrIsCustomer
 from .cart import SessionCart
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -75,34 +75,61 @@ class OperationCartAPIView(CartMixin, APIView):
 class AddToCartAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.cart_add
     authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+    permission_classes = [IsNotAuthenticatedOrIsCustomer]
 
     def post(self, *args, **kwargs):
         product_slug = kwargs.get("slug")
         product_size = kwargs.get("size")
 
         product = get_object_or_404(Product, slug=product_slug)
-        data = self.cart_operation(self.request, product, product_size)
+        product_variation = get_object_or_404(
+            ProductVariation, product=product, size=product_size
+        )
 
-        return Response(data=data, status=status.HTTP_200_OK)
+        if (
+            product_variation.availability_status
+            != AvailabilityStatuses.out_of_stock[0]
+        ):
+            data = self.cart_operation(self.request, product, product_size)
+            return Response(data=data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"not available": "This product is not in stock now"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class CartItemAddQuantityAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.item_add_quantity
     authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+    permission_classes = [IsNotAuthenticatedOrIsCustomer]
 
     def post(self, *args, **kwargs):
         product_slug = kwargs.get("slug")
         product_size = kwargs.get("size")
 
         product = get_object_or_404(Product, slug=product_slug)
-        data = self.cart_operation(self.request, product, product_size)
+        product_variation = get_object_or_404(
+            ProductVariation, product=product, size=product_size
+        )
 
-        return Response(data=data, status=status.HTTP_200_OK)
+        if (
+            product_variation.availability_status
+            != AvailabilityStatuses.out_of_stock[0]
+        ):
+            data = self.cart_operation(self.request, product, product_size)
+            return Response(data=data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"not available": "This product is not in stock now"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class CartItemMinusQuantityAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.item_minus_quantity
     authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+    permission_classes = [IsNotAuthenticatedOrIsCustomer]
 
     def post(self, *args, **kwargs):
         product_slug = kwargs.get("slug")
@@ -117,6 +144,7 @@ class CartItemMinusQuantityAPIView(OperationCartAPIView):
 class CartClearAPIView(OperationCartAPIView):
     operation_type = CartOperationTypes.cart_clear
     authentication_classes = [SessionAuthentication, CustomTokenAuthentication]
+    permission_classes = [IsNotAuthenticatedOrIsCustomer]
 
     def post(self, *args, **kwargs):
         data = self.cart_operation(self.request)
