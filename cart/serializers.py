@@ -27,6 +27,7 @@ class CartSerializer(serializers.ModelSerializer):
 class CartItemsSerializer(serializers.ModelSerializer):
     product_name = serializers.SerializerMethodField()
     product_variation_details = serializers.SerializerMethodField()
+    product_slug = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItems
@@ -34,6 +35,7 @@ class CartItemsSerializer(serializers.ModelSerializer):
             "product",
             "product_name",
             "product_variation_details",
+            "product_slug",
             "quantity",
             "total_price",
         )
@@ -50,6 +52,10 @@ class CartItemsSerializer(serializers.ModelSerializer):
             "size": product_variation.size,
         }
 
+    def get_product_slug(self, obj):
+        product = obj.product
+        return product.slug
+
 
 class SessionCartSerializer(serializers.Serializer):
     def to_representation(self, instance):
@@ -61,6 +67,7 @@ class SessionCartSerializer(serializers.Serializer):
 
             item_data["product_title"] = product.title
             item_data["product_id"] = product.id
+            item_data["product_slug"] = product.slug
             item_data["product_variation"] = ProductVariationSerializer(variation).data
             item_data["total_price"] = (
                 item_data.get("price_with_discount", item_data["price"])
