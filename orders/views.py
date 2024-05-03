@@ -8,7 +8,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsCustomer, IsStore
 from .serializers import OrderSerializer, OrderItemsSerializer
-from .models import Order
+from .models import Order, OrderItems
 from rest_framework.permissions import AllowAny, IsAdminUser
 from payment.services import paypal_complete_payment
 from .utils import OrderMixin
@@ -18,6 +18,33 @@ from coupons.utils import find_coupons
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.core.exceptions import ValidationError
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+
+
+class OrderHistoryAPIView(ListAPIView):
+    """
+    API view for listing all orders of the authenticated customer.
+    """
+
+    pagination_class = PageNumberPagination
+    serializer_class = OrderItemsSerializer  # Serializer for listing orders
+    permission_classes = [
+        IsAuthenticated,
+        IsCustomer,
+    ]  # Only authenticated users with `IsCustomer` permission
+    authentication_classes = [
+        SessionAuthentication,
+        CustomTokenAuthentication,
+    ]  # Auth classes
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the orders items
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return OrderItems.objects.filter(order__user=user)
 
 
 class OrderAPIView(OrderMixin, ListCreateAPIView):

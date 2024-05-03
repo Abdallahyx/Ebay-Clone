@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import OrderAPIView, OrderPaypalPaymentComplete
+from .views import OrderAPIView, OrderHistoryAPIView, OrderPaypalPaymentComplete
 from rest_framework.routers import DefaultRouter
 
 # router = DefaultRouter()
@@ -13,4 +13,5 @@ urlpatterns = [
         name="order_payment_complete",
     ),
     # path("", include(router.urls)),
+    path("history/", OrderHistoryAPIView.as_view(), name="order-history"),
 ]
