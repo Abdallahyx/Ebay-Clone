@@ -4,6 +4,7 @@ from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authtoken.models import Token
 
 from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsCustomer, IsStore
@@ -116,6 +117,14 @@ class OrderPaypalPaymentComplete(OrderMixin, APIView):
     ]  # Auth classes
 
     def get(self, *args, **kwargs):
+        token_key = self.request.query_params.get("token")
+        if token_key:
+            try:
+                token = Token.objects.get(key=token_key)
+                self.request.user = token.user
+                self.request.auth = token
+            except Token.DoesNotExist:
+                return Response({"error": "Invalid token."})
         mixin = OrderMixin()
         order_id = kwargs["order_id"]
         payment_id = self.request.query_params.get("paymentId")

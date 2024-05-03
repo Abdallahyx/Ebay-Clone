@@ -155,9 +155,12 @@ class OrderMixin(CartMixin):
         print(total_amount)  # Assign total_amount back to the order
         order.save()
         create_payment_info(order)
+        user_token = self.request.auth.key
         if response.data["payment_method"] == Order.PAYMENT_METHODS[2][0]:
             # If the payment method is by card, add a PayPal payment link
-            response.data["payment_link"] = paypal_create_order(total_amount, order_id)
+            response.data["payment_link"] = paypal_create_order(
+                total_amount, order_id, user_token
+            )
         else:
             self.process_order_payment_with_balance(order)
 
