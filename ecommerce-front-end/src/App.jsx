@@ -37,7 +37,7 @@ function App() {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/orderhistory" element={<OrderHistory/>}/> {/*should be orderhistory+accountid*/}
         <Route path="/inventory" element={<InventoryPage/>}/> {/*should be orderhistory+accountid*/}
-        <Route path="/product/123" element={<ProductPage />} /> {/*Route for product page*/}
+        <Route path="/product/:slug" element={<ProductPage />} /> {/*Route for product page*/}
         <Route path="/cart" element={<CartPage passPrice={passPrice} />} />
         <Route path="/checkout" element={<CheckoutPage checkoutprice={checkoutprice}/>} />
 

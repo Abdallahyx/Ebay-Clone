@@ -2,12 +2,10 @@ import "./MainPage.css";
 import arrow from "../../SVGs/arrow.svg";
 import arrownothovered from "../../SVGs/arrownothovered.svg";
 import collection from "../../SVGs/pexels-jatin-anand-125779.jpg";
-import product1 from "../../SVGs/p-d3.webp";
-import product2 from "../../SVGs/p-d9-3.webp";
-import product3 from "../../SVGs/hmgoepprod_90104284-e151-482d-8d2e-1ce07f68e2f5.webp";
+
 import { useState } from "react";
 import Product from "../../Components/Product";
-import product4 from "../../SVGs/hmgoepprod3.webp";
+
 import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
 
@@ -58,28 +56,28 @@ function MainPage(props) {
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          img={product1}
+          photo="Apple-IPhone-14-With-FaceTime-128GB-6GB-RAM_1407_2.jpeg"
           title={"Ribbed modal T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          img={product2}
+          photo="AppleWatchUltra.jpg"
           title={"Oversized Motif T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          img={product3}
+          photo="Samsung-71a43be3abebbcfd157bc81500.jpg"
           title={"Oversized Printed T-shirt"}
           price={"$" + 18.0}
         />
         <Product
           onAddCartClick={props.onAddCartClick}
           className="Productt"
-          img={product4}
+          photo="71VPHir5nhL._AC_SL1500_.jpg"
           title={"Oversized Smiling T-shirt"}
           price={"$" + 18.0}
         />

@@ -101,7 +101,7 @@
     font-weight: 400;
     text-decoration: underline;
 }
-.productdetails .quantity
+.productdetails .quantityyy
 {
     margin-left: 15px;
     width: 33%;
@@ -112,7 +112,7 @@
     flex-direction: row;
    
 }
-.productdetails .quantity p
+.productdetails .quantityyy p
 {
     width: 33%;
 }

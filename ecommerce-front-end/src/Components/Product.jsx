@@ -39,7 +39,7 @@ function Product(product) {
     sethoverv(false);
   };
 
-  const productID = 123;
+  const productID = product.slug;
 
   const handleImageClick = () => {
     // Navigate to the product page when the image is clicked
@@ -54,7 +54,7 @@ function Product(product) {
       <div className="Image" >
         {" "}
         {/* Attach click handler to the whole image container */}
-        <img src="https://cdn.shortpixel.ai/spai/q_glossy+ret_img+to_webp/mobizil.com/wp-content/uploads/2023/09/iPhone-15-3.jpg" alt={product.title} />
+        <img src={"/Images/"+product.photo.substring(product.photo.lastIndexOf("/") + 1)} alt={product.title} />
         <div className="overlay">
           <div
             onMouseEnter={handleMouseEnterCart}

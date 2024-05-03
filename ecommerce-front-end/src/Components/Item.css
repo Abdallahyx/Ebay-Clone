@@ -129,6 +129,7 @@ h1 {
 }
 
 .selected {
+  cursor: pointer;
   outline: 2px solid black;
   border-radius: 3%;
 }

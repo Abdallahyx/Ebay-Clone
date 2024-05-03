@@ -52,6 +52,7 @@ function ShopPage() {
   const handleCategoryFilter = (event) => {
     
     setCategoryFilter(event.target.value);
+    console.log(event.target.value)
     console.log(categoryFilter)
   };
 

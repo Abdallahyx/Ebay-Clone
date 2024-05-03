@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "../Components/Inventory.css";
-function convertToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = () => {
-      resolve(fileReader.result);
-    };
-    fileReader.onerror = (error) => {
-      reject(error);
-    };
-  });
-}
+
 function Inventory() {
   const [remainingQuantity, setRemainingQuantity] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [size, setSize] = useState(0);
 
   const displayInventory = async () => {
     const response = await fetch("http://127.0.0.1:8000/store/inventory/", {
@@ -48,9 +38,7 @@ function Inventory() {
   };
 
   const handleAddProduct = async (newProduct) => {
-    const variations = [
-      { size: "M", quantity_in_stock: 142 },
-      {size: "L", quantity_in_stock: 141},]
+     
     const formData = new FormData();
     formData.append("title", newProduct.title);
     formData.append("category", newProduct.category);
@@ -59,9 +47,14 @@ function Inventory() {
     formData.append("description", newProduct.description);
     formData.append("discount", newProduct.discount);
     formData.append("photo", newProduct.photo);
-    formData.append("variations",JSON.stringify(variations)); 
     // Append other product data
-
+  
+    newProduct.variations.forEach(item => {
+      formData.append('variations',JSON.stringify(item));
+    });
+    console.log('caasdasd')
+    console.log(newProduct.variations);
+  console.log(formData);
     const response = await fetch("http://127.0.0.1:8000/store/create/", {
       method: "POST",
       headers: {
@@ -88,13 +81,40 @@ function Inventory() {
     await displayInventory();
     console.log(formData);
   };
-  const handleEditProduct = (updatedProduct) => {
+  const handleEditProduct = async (updatedProduct) => {
     const newQuantity = [...remainingQuantity];
     const index = newQuantity.findIndex((p) => p.id === updatedProduct.id);
     newQuantity[index] = updatedProduct;
     setRemainingQuantity(newQuantity);
+    const formData = new FormData();
+    formData.append("title", updatedProduct.title);
+    formData.append("category", updatedProduct.category);
+    formData.append("slug", updatedProduct.slug);
+    formData.append("price", updatedProduct.price);
+    formData.append("description", updatedProduct.description);
+    formData.append("discount", updatedProduct.discount);
+    // Append other product data
+  
+    updatedProduct.variations.forEach(item => {
+      formData.append('variations',JSON.stringify(item));
+    });
+    const response= await fetch(`http://127.0.0.1:8000/store/update/${updatedProduct.slug}/`,
+  {
+    method: "PUT",
+    headers: {
+      Authorization: `Token ${localStorage.getItem("token")}`,
+     
+    },
+    body: formData,
+  }
+  )
+  displayInventory();
+  console.log("response");
+  console.log(await response.json());
     setShowEditForm(false);
     setEditingProduct(null);
+    
+
   };
   const handleRemoveProduct = async (slug) => {
     console.log(slug);
@@ -114,7 +134,10 @@ function Inventory() {
       remainingQuantity.filter((product) => product.slug !== slug)
     );
   };
-  console.log(remainingQuantity);
+  const handleSizeChange = (event) => {
+    setSize(event.target.value);
+
+  }
   return (
     <div className="justifywrapper">
       <h1>Inventory</h1>
@@ -134,7 +157,6 @@ function Inventory() {
           <h3>Item Price</h3>
           <h3>Sold</h3>
           <h3>Remaining</h3>
-          <h3>Modify Remaining</h3>
           <h3>Actions</h3>
         </div>
         {remainingQuantity.map((product, index) => (
@@ -151,28 +173,20 @@ function Inventory() {
               )}
               {/* Ensure that img attribute is used */}
             </div>
-            <p className="detail">{product.title}</p>
+            <p className="detail">{product.title}{product.variations.length>1?<select onChange={handleSizeChange} className="sizeoptions">
+              {product.variations.map((variation, index) => {
+                return <option value={index} key={index}>{variation.size}</option>;
+              })}
+
+              </select>:""}</p>
             <p className="detail">${product.price.toFixed(2)}</p>
             <p className="detail sold">Sold Quantity</p>
-            {product.quantity === 0 ? (
+            {product.variations[0].quantity_in_stock === 0 ? (
               <p className="detail remaining">Sold out!</p>
             ) : (
-              <p className="detail remaining">{product.quantity}</p>
+              <p className="detail remaining">{product.variations.length>1?product.variations[size].quantity_in_stock:product.variations[0].quantity_in_stock}</p>
             )}
-            <div className="detail">
-              <button
-                className="buttonbasic"
-                onClick={() => handleIncrement(index)}
-              >
-                +
-              </button>
-              <button
-                className="decrementButton"
-                onClick={() => handleDecrement(index)}
-              >
-                -
-              </button>
-            </div>
+         
             <div className="detail actionButtons">
               <button
                 className="editButton stylebutton"
@@ -213,7 +227,7 @@ function AddProductForm({ onSubmit, onCancel }) {
   const [description, setDescription] = useState("");
   const [discount, setDiscount] = useState(0);
   const [photo, setImageFile] = useState(null);
-  const [quantity, setQuantity] = useState(0);
+  const [variations, setVariations] = useState([{ size: "default", quantity_in_stock: 0 }]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -225,7 +239,7 @@ function AddProductForm({ onSubmit, onCancel }) {
       description,
       discount,
       photo,
-      quantity,
+      variations,
     };
     onSubmit(newProduct);
     resetForm();
@@ -239,7 +253,24 @@ function AddProductForm({ onSubmit, onCancel }) {
     setDescription("");
     setDiscount(0);
     setImageFile(null);
-    setQuantity(0);
+    setVariations([{ size: "", quantity_in_stock: 0 }]);
+  };
+
+  const handleAddVariation = () => {
+    setVariations([...variations, { size: "", quantity_in_stock: 0 }]);
+  };
+
+  const handleSizeChange = (index, value) => {
+    const updatedVariations = [...variations];
+    // Check if the input value is empty, if so, set it to "default"
+    updatedVariations[index].size = value.trim() === "" ? "default" : value;
+    setVariations(updatedVariations);
+  };
+
+  const handleQuantityChange = (index, value) => {
+    const updatedVariations = [...variations];
+    updatedVariations[index].quantity_in_stock = value;
+    setVariations(updatedVariations);
   };
 
   return (
@@ -296,19 +327,33 @@ function AddProductForm({ onSubmit, onCancel }) {
         <label>
           Image Upload:
           <input
-            className="upload"
             type="file"
             accept="image/*"
             onChange={(e) => setImageFile(e.target.files[0])}
           />
         </label>
         <label>
-          Quantity:
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
+          Variations:
+          {variations.map((variation, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                placeholder="Size"
+                defaultValue={"default"}
+                value={variation.size}
+                onChange={(e) => handleSizeChange(index, e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Quantity"
+                value={variation.quantity}
+                onChange={(e) => handleQuantityChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+          <button type="button" onClick={handleAddVariation}>
+            Add New Variation
+          </button>
         </label>
         <button className="buttonbasic" type="submit">
           Add
@@ -329,7 +374,7 @@ function EditProductForm({ product, onSubmit, onCancel, onRemove }) {
   const [description, setDescription] = useState(product.description);
   const [discount, setDiscount] = useState(product.discount);
   const [photo, setImageFile] = useState(null);
-  const [quantity, setQuantity] = useState(product.quantity);
+  const [variations, setVariations] = useState(product.variations);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -342,9 +387,25 @@ function EditProductForm({ product, onSubmit, onCancel, onRemove }) {
       description,
       discount,
       photo,
-      quantity,
+      variations,
     };
     onSubmit(updatedProduct);
+  };
+
+  const handleAddVariation = () => {
+    setVariations([...variations, { size: "default", quantity_in_stock: 0 }]);
+  };
+
+  const handleSizeChange = (index, value) => {
+    const updatedVariations = [...variations];
+    updatedVariations[index].size = value;
+    setVariations(updatedVariations);
+  };
+
+  const handleQuantityChange = (index, value) => {
+    const updatedVariations = [...variations];
+    updatedVariations[index].quantity_in_stock = value;
+    setVariations(updatedVariations);
   };
 
   return (
@@ -405,6 +466,28 @@ function EditProductForm({ product, onSubmit, onCancel, onRemove }) {
             accept="image/*"
             onChange={(e) => setImageFile(e.target.files[0])}
           />
+        </label>
+        <label>
+          Variations:
+          {variations.map((variation, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                placeholder="Size"
+                value={variation.size}
+                onChange={(e) => handleSizeChange(index, e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Quantity"
+                value={variation.quantity_in_stock}
+                onChange={(e) => handleQuantityChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+          <button type="button" onClick={handleAddVariation}>
+            Add New Variation
+          </button>
         </label>
         <button className="buttonbasic" type="submit">
           Save

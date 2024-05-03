@@ -1,13 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Item.css";
 import img1 from "../SVGs/hmgoepprod_90104284-e151-482d-8d2e-1ce07f68e2f5.webp";
 import img2 from "../SVGs/hmgoepprod3.webp"; // Import additional images here
 
-function Item() {
+function Item(props) {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Index of the current image
   const [selectedSize, setSelectedSize] = useState(""); // State to hold selected size
+  const [item, setItem] = useState({}); // State to hold item data
   const imageList = [img1, img2]; // Array of image sources
+
+  const getProduct = async () => {
+ 
+    const response = await fetch(`http://127.0.0.1:8000/products/${props.slug}/`);
+    const data = await response.json();
+    const fullproduct = {
+      'title': data.title,
+      'price': data.price,
+      'description': data.description,
+      'product_image': [data.photo, img2],
+      'variations': data.variations,
+      'slug': data.slug,
+      'discount': data.price_with_discount,
+      'category': data.category,
+    };
+    setItem(fullproduct);
+    setCurrentImageIndex(0);
+  };
+  const addToCartHandler = async() => { 
+    const response = await fetch(selectedSize===""?`http://127.0.0.1:8000/cart/add/${item.slug}/%20/`:
+    `http://127.0.0.1:8000/cart/add/${item.slug}/${selectedSize}/`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${localStorage.getItem("token")}`
+    },
+  })
+  const data = await response.json();
+  console.log(data);
+  }
+
+  useEffect(() => {
+    getProduct();
+  }, []);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -42,10 +78,10 @@ function Item() {
   return (
     <div className="product-container">
       <div className="product-details">
-        <h1>Cotton Twill Cap</h1>
+        <h1>{item.title}</h1>
         <p className="price">
-          <span className="discounted-price">$28.00</span>
-          <span className="original-price">$35.00</span>
+          <span className="discounted-price">${item.discount}</span>
+          <span className="original-price">${item.price}</span>
           <span className="discount">20% OFF</span>
         </p>
         <div className="color-option">
@@ -56,40 +92,21 @@ function Item() {
           </div>
         </div>
         <div className="size-option">
-          <span>Size</span>
-          <div className="size-choice">
-            <button
-              className={selectedSize === "XS" ? "selected" : ""}
-              onClick={() => handleSizeSelect("XS")}
-            >
-              XS
-            </button>
-            <button
-              className={selectedSize === "S" ? "selected" : ""}
-              onClick={() => handleSizeSelect("S")}
-            >
-              S
-            </button>
-            <button
-              className={selectedSize === "M" ? "selected" : ""}
-              onClick={() => handleSizeSelect("M")}
-            >
-              M
-            </button>
-            <button
-              className={selectedSize === "L" ? "selected" : ""}
-              onClick={() => handleSizeSelect("L")}
-            >
-              L
-            </button>
-            <button
-              className={selectedSize === "XL" ? "selected" : ""}
-              onClick={() => handleSizeSelect("XL")}
-            >
-              XL
-            </button>
-          </div>
-        </div>
+  <span>Size</span>
+  <div className="size-choice">
+    {item.variations &&
+      item.variations.map((variation, index) => (
+        <button 
+          key={index}
+          className={selectedSize === variation.size ? "selected" : ""}
+          onClick={() => handleSizeSelect(variation.size)}
+          disabled={variation.quantity_in_stock === 0}
+        >
+          {variation.size}
+        </button>
+      ))}
+  </div>
+</div>
         <div className="quantity">
           <span>Quantity</span>
           <div className="qty-control">
@@ -103,18 +120,23 @@ function Item() {
           </div>
         </div>
         <div className="actions">
-          <button className="add-to-cart">
-            Add to cart - ${quantity * 28.0}
+          <button onClick={addToCartHandler} className="buttonbasic">
+            Add to cart - ${quantity * item.discount}
           </button>
-          <button className="buy-paypal">Buy with PayPal</button>
-          <br></br>
+          <button className="buttonbasic">Buy with PayPal</button>
+          <br />
           <a href="/123" className="more-options">
             More payment options
           </a>
         </div>
       </div>
       <div className="product-image">
-        <img src={imageList[currentImageIndex]} alt="Cotton Twill Cap" />
+        {item.product_image && (
+          <img
+            src={"/Images/" + item.product_image[0].substring(item.product_image[0].lastIndexOf("/") + 1)}
+            alt="Cotton Twill Cap"
+          />
+        )}
         <div className="image-nav">
           <span className="prev" onClick={prevImage}>
             &lt;
@@ -125,15 +147,16 @@ function Item() {
         </div>
       </div>
       <div className="image-bar">
-        {imageList.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`Image ${index + 1}`}
-            onClick={() => selectImage(index)}
-            className={index === currentImageIndex ? "selected" : ""}
-          />
-        ))}
+        {item.product_image &&
+          item.product_image.map((image, index) => (
+            <img
+              key={index}
+              src={"/Images/" + item.product_image[0].substring(item.product_image[0].lastIndexOf("/") + 1)}
+              alt={`Image ${index + 1}`}
+              onClick={() => selectImage(index)}
+              className={index === currentImageIndex ? "selected" : ""}
+            />
+          ))}
       </div>
     </div>
   );
