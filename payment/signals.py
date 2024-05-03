@@ -56,7 +56,6 @@ def update_stock_on_payment(sender, instance, created, **kwargs):
             product_variation.save()  # Save the updated stock value
             StoreTransaction.objects.create(
                 store=product_variation.product.store,
-                product_variation=product_variation,
                 order_item=item,
                 quantity=item.quantity,
                 status=TransactionStatus.SUCCESS,
