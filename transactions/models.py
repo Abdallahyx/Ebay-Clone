@@ -36,10 +36,6 @@ class StoreTransaction(models.Model):
     store = models.ForeignKey(
         Store, on_delete=models.CASCADE, related_name="store_transactions"
     )
-    # The product variation that was sold
-    product_variation = models.ForeignKey(
-        ProductVariation, on_delete=models.CASCADE, related_name="store_transactions"
-    )
     # The order item associated with the transaction
     order_item = models.ForeignKey(
         OrderItems, on_delete=models.CASCADE, related_name="store_transactions"
