@@ -17,6 +17,7 @@ from coupons.services import get_coupon
 from coupons.utils import find_coupons
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.core.exceptions import ValidationError
 
 
 class OrderAPIView(OrderMixin, ListCreateAPIView):
@@ -65,13 +66,15 @@ class OrderAPIView(OrderMixin, ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Call the super class to create the order
-        response = super().create(request, *args, **kwargs)
-        self.request = request  # Set the request in the mixin
+        try:  # Call the super class to create the order
+            response = super().create(request, *args, **kwargs)
+            self.request = request  # Set the request in the mixin
 
-        return self.create_order(
-            response
-        )  # Process the order creation with additional checks
+            return self.create_order(
+                response
+            )  # Process the order creation with additional checks
+        except ValidationError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderPaypalPaymentComplete(OrderMixin, APIView):

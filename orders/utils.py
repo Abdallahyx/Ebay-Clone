@@ -74,8 +74,6 @@ class OrderMixin(CartMixin):
 
                 payment_info = order.payment_info
                 payment_info.is_paid = True
-                payment_info.save()
-
                 payment_info.payment_amount = order_total_amount
                 payment_info.save()
             else:
