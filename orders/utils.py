@@ -1,5 +1,6 @@
 from cart.utils import CartMixin, CartOperationTypes
 from payment.services import create_payment_info, paypal_create_order
+from transactions.models import CustomerTransaction, TransactionStatus
 from .models import OrderItems, Order
 from accounts.models import UserShippingInfo
 from products.models import ProductVariation, AvailabilityStatuses
@@ -10,6 +11,7 @@ from django.template.loader import render_to_string
 from .services import draw_pdf_invoice
 from rest_framework import status
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 
 
 class OrderMixin(CartMixin):
@@ -71,11 +73,17 @@ class OrderMixin(CartMixin):
             if user_balance >= order_total_amount:
                 order.user.balance.balance -= order_total_amount
                 order.user.balance.save()
-
                 payment_info = order.payment_info
                 payment_info.is_paid = True
                 payment_info.payment_amount = order_total_amount
                 payment_info.save()
+                # Create a CustomerTransaction
+                CustomerTransaction.objects.create(
+                    user=self.request.user,
+                    amount=-Decimal(order_total_amount),
+                    description="Paid via Balance",
+                    status=TransactionStatus.SUCCESS,
+                )
             else:
                 raise ValidationError("Insufficient balance")
 
@@ -155,12 +163,9 @@ class OrderMixin(CartMixin):
         print(total_amount)  # Assign total_amount back to the order
         order.save()
         create_payment_info(order)
-        user_token = self.request.auth.key
         if response.data["payment_method"] == Order.PAYMENT_METHODS[2][0]:
             # If the payment method is by card, add a PayPal payment link
-            response.data["payment_link"] = paypal_create_order(
-                total_amount, order_id, user_token
-            )
+            response.data["payment_link"] = paypal_create_order(total_amount, order_id)
         else:
             self.process_order_payment_with_balance(order)
 

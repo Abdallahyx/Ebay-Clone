@@ -4,8 +4,6 @@ from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import AuthenticationFailed
 
 from CustomAuth.auth import CustomTokenAuthentication
 from accounts.permissions import IsCustomer, IsStore
@@ -107,25 +105,12 @@ class OrderAPIView(OrderMixin, ListCreateAPIView):
 
 
 class OrderPaypalPaymentComplete(OrderMixin, APIView):
-    permission_classes = [
-        IsAuthenticated,
-        IsCustomer,
-    ]  # Only authenticated users with `IsCustomer` permission
+    permission_classes = [IsCustomer]
     authentication_classes = [
-        SessionAuthentication,
         CustomTokenAuthentication,
     ]  # Auth classes
 
     def get(self, *args, **kwargs):
-        token_key = self.request.query_params.get("token")
-        if token_key:
-            try:
-                token_auth = CustomTokenAuthentication()
-                user, token = token_auth.authenticate_credentials(token_key)
-                self.request.user = user
-                self.request.auth = token
-            except AuthenticationFailed:
-                return Response({"error": "Invalid token."})
         mixin = OrderMixin()
         order_id = kwargs["order_id"]
         payment_id = self.request.query_params.get("paymentId")

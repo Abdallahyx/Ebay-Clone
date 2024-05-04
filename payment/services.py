@@ -45,7 +45,7 @@ access_token = get_paypal_access_token(
 )
 
 
-def paypal_create_order(value, order_id, user_token):
+def paypal_create_order(value, order_id):
     payment_url = None
     payment = paypalrestsdk.Payment(
         {
@@ -58,8 +58,8 @@ def paypal_create_order(value, order_id, user_token):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:8000/orders/order/{order_id}/?token={user_token}",
-                "cancel_url": f"http://127.0.0.1:8000/orders/order/{order_id}/?token={user_token}",
+                "return_url": f"http://127.0.0.1:8000/orders/order/{order_id}/",
+                "cancel_url": f"http://127.0.0.1:8000/orders/order/{order_id}/",
             },
         }
     )
@@ -119,7 +119,7 @@ def paypal_add_balance(value):
             ],
             "redirect_urls": {
                 "return_url": f"http://127.0.0.1:8000/payments/user/add-balance/complete/?value={str(value)}",
-                "cancel_url": f"http://127.0.0.1:8000/accounts/profile/",
+                "cancel_url": f"http://127.0.0.1:8000/payments/user/add-balance/complete/?value={str(value)}",
             },
         }
     )
