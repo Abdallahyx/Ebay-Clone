@@ -9,16 +9,15 @@ function TransactionHistory() {
     let allResults = [];
     while (true) {
       const response = await fetch(
-        http://127.0.0.1:8000/transactions/customer/?page=${currentPage},
+        `http://127.0.0.1:8000/transactions/customer/?page=${currentPage}`,
         {
           method: "GET",
           headers: {
-            Authorization: Token ${localStorage.getItem("token")},
+            Authorization: `Token ${localStorage.getItem("token")}`,
           },
         }
       );
       const data = await response.json();
-      console.log("data");
       console.log(data);
       if (!response.ok) {
         break;
@@ -37,7 +36,7 @@ function TransactionHistory() {
       return (
         <div className="productdetails report">
           <p className="detail ">
-            {order.timestamp}
+            {new Date(order.timestamp).toLocaleString()}
           </p>
           <p className="detail ">{order.description}</p>
           <p className="detail ">{order.amount}</p>
