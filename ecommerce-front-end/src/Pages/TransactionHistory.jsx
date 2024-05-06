@@ -9,11 +9,11 @@ function TransactionHistory() {
     let allResults = [];
     while (true) {
       const response = await fetch(
-        `http://127.0.0.1:8000/transactions/customer/?page=${currentPage}`,
+        http://127.0.0.1:8000/transactions/customer/?page=${currentPage},
         {
           method: "GET",
           headers: {
-            Authorization: `Token ${localStorage.getItem("token")}`,
+            Authorization: Token ${localStorage.getItem("token")},
           },
         }
       );
@@ -41,6 +41,7 @@ function TransactionHistory() {
           </p>
           <p className="detail ">{order.description}</p>
           <p className="detail ">{order.amount}</p>
+          <p className="detail ">{order.status}</p>
         </div>
       );
     });
@@ -55,6 +56,7 @@ function TransactionHistory() {
             <h3>Time Stamp</h3>
             <h3>Paid by</h3>
             <h3>Amount</h3>
+            <h3>Status</h3>
           </div>
 
           {rendertransactionhistory()}
