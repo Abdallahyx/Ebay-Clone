@@ -25,14 +25,13 @@ function AccountSeller() {
     }
   )
     const data = await response.json();
-    console.log(data);
     setInfo(data);
     setUsername(data.username.slice(1));
     console.log(info);
     setLoading(false);
 
   }
-  useEffect(() => {displayAccountInfo()}, [username]);
+  useEffect(() => {displayAccountInfo()}, []);
 
 
   const navigate = useNavigate();
