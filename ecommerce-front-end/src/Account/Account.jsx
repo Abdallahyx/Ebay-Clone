@@ -41,7 +41,7 @@ function Account() {
   const [hoverpayment, sethoverpayment] = useState(false);
   const [hoverlogout, sethoverlogout] = useState(false);
   const handleLogout = async () => {
-   
+    try {
       const response = await fetch("http://127.0.0.1:8000/accounts/logout/", {
         method: "GET",
         headers: {
@@ -51,10 +51,15 @@ function Account() {
       });
       const data = await response.json();
       if (response.ok) {
+        console.log("success");
         localStorage.removeItem("token");
         navigate("/login");
-      } 
-
+      } else {
+        throw new Error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleMouseEnterpayment = () => {
