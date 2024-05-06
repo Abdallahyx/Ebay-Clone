@@ -55,6 +55,7 @@ function Account() {
         localStorage.removeItem("token");
         navigate("/login");
       } else {
+        console.error("Failed to logout using the API");
         throw new Error("Logout failed");
       }
     } catch (error) {
