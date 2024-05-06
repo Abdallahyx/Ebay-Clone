@@ -25,13 +25,14 @@ function AccountSeller() {
     }
   )
     const data = await response.json();
+    console.log(data);
     setInfo(data);
     setUsername(data.username.slice(1));
     console.log(info);
     setLoading(false);
 
   }
-  useEffect(() => {displayAccountInfo()}, []);
+  useEffect(() => {displayAccountInfo()}, [username]);
 
 
   const navigate = useNavigate();
@@ -173,9 +174,14 @@ function AccountSeller() {
               <p className="text">123, ABC street, XYZ city</p>
               {/* Add the seller's store address */}
             </div>
+            <div className="linkss">
             <a href="/inventory">
               <h3>Go to Inventory</h3>
             </a>
+            <a href="/transactionhistoryseller">
+              <h3>TransactionHistory</h3>
+            </a>
+            </div>
           </div>
         </div>
       </div>
