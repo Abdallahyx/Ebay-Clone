@@ -1,10 +1,6 @@
 import "./Account.css";
 import payment from "../SVGs/payment.svg";
-import address from "../SVGs/address.svg";
-import dashboard from "../SVGs/dashboard.svg";
 import paymenthover from "../SVGs/paymenthover.svg";
-import addresshover from "../SVGs/addresshover.svg";
-import dashboardhover from "../SVGs/dashboardhover.svg";
 import logout from "../SVGs/logout.svg";
 import logouthover from "../SVGs/logouthover.svg";
 import { useState } from "react";
@@ -19,6 +15,7 @@ function Account() {
   const token = localStorage.getItem("token");
   const [info, setInfo] = useState({});
   const [username, setUsername] = useState("");
+  const [paymentmode, setPaymentmode] = useState(false);
   const displayAccountInfo = async () => {
     const response = await fetch("http://127.0.0.1:8000/accounts/profile/", {
       method: "GET",
@@ -41,12 +38,10 @@ function Account() {
   //
 
   const navigate = useNavigate();
-  const [hoverdash, sethoverdash] = useState(false);
   const [hoverpayment, sethoverpayment] = useState(false);
-  const [hoveraddress, sethoveraddress] = useState(false);
   const [hoverlogout, sethoverlogout] = useState(false);
   const handleLogout = async () => {
-    try {
+   
       const response = await fetch("http://127.0.0.1:8000/accounts/logout/", {
         method: "GET",
         headers: {
@@ -55,42 +50,52 @@ function Account() {
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
-        console.log("success");
         localStorage.removeItem("token");
         navigate("/login");
-      } else {
-        throw new Error("Logout failed");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+      } 
+
   };
-  const handleMouseEnterdash = () => {
-    sethoverdash(true);
-  };
-  const handleMouseLeavedash = () => {
-    sethoverdash(false);
-  };
+
   const handleMouseEnterpayment = () => {
     sethoverpayment(true);
   };
   const handleMouseLeavepayment = () => {
     sethoverpayment(false);
   };
-  const handleMouseEnteraddress = () => {
-    sethoveraddress(true);
-  };
-  const handleMouseLeaveaddress = () => {
-    sethoveraddress(false);
-  };
+
   const handleMouseEnterlogout = () => {
     sethoverlogout(true);
   };
   const handleMouseLeavelogout = () => {
     sethoverlogout(false);
   };
+  const handlePaymentClick = () => {
+    setPaymentmode(!paymentmode);
+  }
+  const addBalanceHandler = async (e) => {
+    e.preventDefault();
+    const form = e.target.form;
+    const formData = new FormData(form);
+    const formObject = {};
+    for (let [key, value] of formData.entries()) {
+      formObject[key] = value;
+    }
+    const response = await fetch("http://127.0.0.1:8000/payments/user/add-balance/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formObject),
+      }
+      
+    )
+    const data = await response.json();
+    window.location.href=data.payment_url
+    
+  }
 
   return (
     <div className="container">
@@ -100,26 +105,13 @@ function Account() {
 
       <div className="components">
         <div className="options">
-          <div
-            onMouseEnter={handleMouseEnterdash}
-            onMouseLeave={handleMouseLeavedash}
-            className="dashboard item"
-          >
-            <img src={hoverdash ? dashboardhover : dashboard} alt="dashboard" />
-            <p>Dashboard</p>
-          </div>
-          <div
-            onMouseEnter={handleMouseEnteraddress}
-            onMouseLeave={handleMouseLeaveaddress}
-            className="address item"
-          >
-            <img src={hoveraddress ? addresshover : address} alt="address" />
-            <p>Address</p>
-          </div>
+         
+          
           <div
             onMouseEnter={handleMouseEnterpayment}
             onMouseLeave={handleMouseLeavepayment}
             className="payment item"
+            onClick={handlePaymentClick}
           >
             <img src={hoverpayment ? paymenthover : payment} alt="payment" />
             <p>Payment</p>
@@ -138,9 +130,19 @@ function Account() {
           <p className="firstname">
             Hello <user>{Loading?"Loading":username}</user>
           </p>
-          {/* Add the user's name here instead of Ahmed*/}
           <div className="details">
-            <h3>Account details</h3>
+            {paymentmode===true?
+            <>
+            <h3>Add Balance</h3>
+            <form className="removeall">
+            <input name="value" type="number" placeholder="Enter amount"></input>
+            <button onClick={addBalanceHandler} className="buttonbasic">Confirm</button>
+            </form>
+            <a href="/transactionhistorycustomer">
+              <h3>Transaction History</h3>
+            </a>
+            </>
+            :(<><h3>Account details</h3>
             <div className="name menuitem">
               <h4>Name</h4>
               <p className="text">{Loading?"Loading":info?info.first_name+" "+info.surname: "loading"}</p> {/* Add the user's name here */}
@@ -166,10 +168,15 @@ function Account() {
               <p className="text">{Loading?"Loading":info.shipping_info.address+','+info.shipping_info.city+','+info.shipping_info.country}</p>
               {/* Add the user's address here */}
             </div>
-          
+            <div className="linkss">
             <a href="/orderhistory">
               <h3>Order History</h3>
             </a>
+            <a href="/paymenthistory">
+              <h3>Payment History</h3>
+            </a>
+            </div></>)}
+            
             {/*instead of # add the link to the order history page*/}
           </div>
         </div>
