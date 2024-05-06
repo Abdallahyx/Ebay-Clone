@@ -32,7 +32,7 @@ function TransactionHistorySeller()
     }
       setTransactionHistory(allResults);
     }
-    useEffect(() => {},[])
+    useEffect(() => {displayTransactionHistory()},[])
 
     const rendertransactionhistory=()=>{
       return transactionhistory.map((order)=>{
@@ -66,9 +66,10 @@ function TransactionHistorySeller()
           <h3>Status</h3>
         </div>
 
+       {rendertransactionhistory()}
       </div>
     </div>
         </div>
     );
 }
-export default TransactionHistorySeller;
+export default TransactionHistorySeller;```
