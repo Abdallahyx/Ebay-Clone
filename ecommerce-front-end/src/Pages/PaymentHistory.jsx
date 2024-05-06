@@ -37,7 +37,8 @@ function PaymentHistory()
             <p className="detail ">{(new Date(order.payment_date)).toLocaleString()}</p>
             <p className="detail ">{order.payment_method}</p>
             <p className="detail ">{order.payment_amount}</p>
-            <p className="detail ">{JSON.stringify(order.is_paid)}</p>
+            <p className="detail ">{order.is_paid}</p>
+            <p className="detail ">{order.user_info.address+","+order.user_info.city+","+order.user_info.country}</p>
           </div>
         )
       })
@@ -53,6 +54,7 @@ function PaymentHistory()
           <h3>Payment Method</h3>
           <h3>Paid Amount</h3>
           <h3>Is Paid</h3>
+          <h3>Shipping Address</h3>
         </div>
 
        {renderPaymentHistory()}
