@@ -35,7 +35,7 @@ function App() {
     <BrowserRouter>  {/* Wrap everything here */}
       <NavigationListener setLoading={setLoading} /> {/* Pass the setLoading function to the NavigationListener component */}
       {loading && <Loader/>} {/* Render the Loader component when loading is true */}
-
+      {!loading && 
       <Routes>
       <Route index element={<HomePage />} />
       <Route path="/login" element={<Login />} />
