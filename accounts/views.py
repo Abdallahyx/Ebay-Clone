@@ -3,16 +3,20 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics, status
+from django.contrib.auth.models import Group
+
+from CustomAuth.auth import CustomTokenAuthentication
 from .serializers import (
-    BuyerRegistrationSerializer,
+    CustomerRegistrationSerializer,
     LoginSerializer,
     ProfileSerializer,
-    SellerRegistrationSerializer,
+    ShippingInfoSerializer,
+    StoreRegistrationSerializer,
     UserBalanceSerializer,
 )
 from .permissions import IsNotAuthenticated
 from rest_framework.views import APIView
-from .models import User, UserToken, UserBalance
+from .models import User, UserShippingInfo, UserToken, UserBalance
 from .token import TokenTypes, AuthTokenMixin, get_token_data
 from django.contrib.auth import logout
 from rest_framework.authentication import TokenAuthentication
@@ -20,14 +24,23 @@ from rest_framework import viewsets
 from rest_framework import mixins
 
 
-class BuyerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
+class CustomerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = BuyerRegistrationSerializer
+    serializer_class = CustomerRegistrationSerializer
     permission_classes = [IsNotAuthenticated]
     token_type = TokenTypes.SIGNUP
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
+
+        # Get the user
+        user = User.objects.get(email=request.data["email"])
+
+        # Get or create the 'customer' group
+        customer_group, created = Group.objects.get_or_create(name="Customers")
+
+        # Add the user to the 'Buyers' group
+        customer_group.user_set.add(user)
 
         return Response(
             {"status": 200, "message": "registered", "data": response.data},
@@ -35,14 +48,23 @@ class BuyerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
         )
 
 
-class SellerRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
+class StoreRegistrationAPIView(AuthTokenMixin, generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = SellerRegistrationSerializer
+    serializer_class = StoreRegistrationSerializer
     permission_classes = [IsNotAuthenticated]
     token_type = TokenTypes.SIGNUP
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
+
+        # Get the user
+        user = User.objects.get(email=request.data["email"])
+
+        # Get or create the 'Stores' group
+        stores_group, created = Group.objects.get_or_create(name="Stores")
+
+        # Add the user to the 'Sellers' group
+        stores_group.user_set.add(user)
 
         return Response(
             {"status": 200, "message": "registered", "data": response.data},
@@ -84,7 +106,7 @@ class LoginAPIView(APIView):
 
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
 
     def get(self, *args, **kwargs):
         user = self.request.user
@@ -98,15 +120,17 @@ class LogoutAPIView(APIView):
             return Response(
                 {"error": "Logout error"}, status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(
+        response = Response(
             {"success": "You successfully logged out!"}, status=status.HTTP_200_OK
         )
+        response.delete_cookie("token")
+        return response
 
 
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     queryset = User.objects.all()
 
     def get_object(self):
@@ -117,21 +141,21 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
 class UserBalanceAPIView(generics.ListAPIView):
     serializer_class = UserBalanceSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [CustomTokenAuthentication]
     queryset = UserBalance.objects.all()
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
 
-class UpdateUserBalanceViewSet(
-    mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
-):
-    serializer_class = UserBalanceSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
-    authentication_classes = [TokenAuthentication]
-    queryset = UserBalance.objects.all()
+# class UpdateUserBalanceViewSet(
+#     mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+# ):
+#     serializer_class = UserBalanceSerializer
+#     permission_classes = [IsAuthenticated, IsAdminUser]
+#     authentication_classes = [CustomTokenAuthentication]
+#     queryset = UserBalance.objects.all()
 
-    def get_object(self):
-        user = get_object_or_404(UserBalance, pk=self.kwargs["pk"])
-        return user
+#     def get_object(self):
+#         user = get_object_or_404(UserBalance, pk=self.kwargs["pk"])
+#         return user
