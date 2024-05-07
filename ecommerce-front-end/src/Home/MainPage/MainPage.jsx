@@ -9,6 +9,9 @@ import Product from "../../Components/Product";
 import Footer from "../../Components/Footer";
 import { useNavigate } from "react-router-dom";
 
+// Default values shown  
+
+
 function MainPage(props) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
@@ -22,6 +25,7 @@ function MainPage(props) {
         <div className="itemm onee">
           <div className="bigtitle">
             <p className="largee">Limited Edition</p>
+    
             <p className="largee">Collection</p>
             <p className="textt">
               Shop exclusive pieces from our limited edition collection

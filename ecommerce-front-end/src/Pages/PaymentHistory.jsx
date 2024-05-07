@@ -4,20 +4,20 @@ import { useEffect } from "react";
 import { useState } from "react";
 function PaymentHistory()
 {
-
+   
     const [PHistory,setPHistory] = useState([])
     const displayPaymentHistory = async () => {
       let currentPage = 1;
       let allResults = [];
       while (true){
-      const response = await fetch(http://127.0.0.1:8000/payments/user/?page=${currentPage},
+      const response = await fetch(`http://127.0.0.1:8000/payments/user/?page=${currentPage}`,
         {
           method:"GET",
           headers: {
-            Authorization: Token ${localStorage.getItem("token")},
+            Authorization: `Token ${localStorage.getItem("token")}`,
           },
         }
-
+        
       )
       const data = await response.json();
       if(!response.ok){

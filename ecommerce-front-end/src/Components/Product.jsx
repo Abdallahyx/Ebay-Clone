@@ -91,7 +91,12 @@ function Product(product) {
       <h3>{product.title}</h3>
       <div className="Price">
         <p>
-          <s>$30.00</s> From {product.price}.00
+       
+        {product.price === product.price_with_discount ? (
+  "$" + product.price + ".00"
+) : (product.price_with_discount ?
+  <>{"$" + product.price_with_discount} From $<s>{product.price}.00</s></>: product.price
+)}
         </p>
       </div>
     </div>

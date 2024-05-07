@@ -5,14 +5,27 @@ import hearthover from "../../SVGs/hearthover.svg";
 import cart from "../../SVGs/cart.svg";
 import carthover from "../../SVGs/carthover.svg";
 import Logo from "../../SVGs/Logo.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Nav.css";
 
 function Nav(props) {
   const token = localStorage.getItem("token");
+  const [cartcount, setcartcount] = useState(0);
 
   const navigate = useNavigate();
+  const displayCartQuantity = async () => {
+    const response = await fetch("http://127.0.0.1:8000/cart/", {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+    await setcartcount(data.total_quantity_of_products);
+    console.log(cartcount)
+  }
+  useEffect(() => {displayCartQuantity()},[])
   const submitHandler = async () => {
     if (!token) {
       navigate("/login");
@@ -119,9 +132,9 @@ function Nav(props) {
               onClick={() => navigate("/cart")}
               alt="cart"
             />
-            {props.count > 0 ? (
+            {cartcount > 0 ? (
               <div className="countttt">
-                <p>{props.count}</p>
+                <p>{cartcount}</p>
               </div>
             ) : null}
           </div>

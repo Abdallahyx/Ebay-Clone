@@ -152,27 +152,7 @@ function AccountSeller() {
               <p className="text">{Loading?"Loading":info.email}</p>{" "}
               {/* Add the user's email here */}
             </div>
-            <h3>Store details</h3>
-            <div className="menuitem">
-              <h4>Store Name</h4>
-              <p className="text">SHOPIFY</p>
-              {/* Add the seller's store address */}
-            </div>
-            <div className="menuitem">
-              <h4>Store Address</h4>
-              <p className="text">123, ABC street, XYZ city</p>
-              {/* Add the seller's store address */}
-            </div>
-            <div className="menuitem">
-              <h4>Store City</h4>
-              <p className="text">123, ABC street, XYZ city</p>
-              {/* Add the seller's store address */}
-            </div>
-            <div className="menuitem">
-              <h4>Store Country</h4>
-              <p className="text">123, ABC street, XYZ city</p>
-              {/* Add the seller's store address */}
-            </div>
+        
             <div className="linkss">
             <a href="/inventory">
               <h3>Go to Inventory</h3>
