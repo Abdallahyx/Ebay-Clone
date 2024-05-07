@@ -1,0 +1,95 @@
+.LoginContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 10px;
+    width: 35%;
+    padding: 20px;
+    border: 0.5pt solid black;
+    flex-wrap: wrap;
+  }
+  .wrapper {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .logo img {
+    width: 10%;
+  }
+  .border {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+ 
+  .buttonss {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .prevstep
+  {
+    margin-bottom: 15px;
+  }
+  .buttonss button {
+    width: 50%;
+    padding: 10px;
+    font-size: 17px;
+    border-radius: 2px;
+    border: 2px solid black;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  .buttonss a {
+    margin: 10px 10px 0px 0px;
+    text-decoration: none;
+    color: black;
+    transition: 0.5s;
+  }
+  .buttonss a:hover {
+    color: #D83636;
+    transition: 0.5s;
+  }
+  .buttonss button:hover {
+    transition: 0.5s;
+    background-color: white;
+      color: black;
+  
+  }
+  input,select {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+  }
+
+  .border p
+  {
+    color: red;
+    font-size: 12px;
+  }
+
+
+ 
+  @media screen and (max-width: 650px) {
+    .logo img {
+      width: 30%;
+    }
+    .LoginContainer {
+      width: 90%;
+    }
+  }
+  

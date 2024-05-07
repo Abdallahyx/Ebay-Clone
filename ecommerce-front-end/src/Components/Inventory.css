@@ -1,0 +1,246 @@
+.justifywrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.justifywrapper h1 {
+  margin: 10px;
+}
+
+.HistoryWrapper {
+  width: 70%;
+  margin: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.producttitles h3 {
+  width: 20%;
+  text-align: center;
+}
+
+.producttitles {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.productdetails {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.productdetails .detail {
+  width: 20%;
+  text-align: center;
+}
+
+.productdetails .detail img {
+  margin: 10px;
+  width: 50%;
+  border-radius: 10px;
+}
+
+.sold {
+  width: 20%;
+  text-align: center;
+  color: green;
+}
+
+.remaining {
+  width: 20%;
+  text-align: center;
+  color: brown;
+}
+
+/* Style for buttons */
+.incrementButton,
+.decrementButton {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(47, 47, 47);
+  border-color: white;
+  color: white;
+}
+
+.decrementButton {
+  margin-left: 5px;
+  background-color: rgb(241, 241, 241);
+  border-color: black;
+  color: black;
+}
+
+/* Add hover effect to highlight rows */
+.productdetails:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.formContainer {
+  width: 60%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formContainer h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.formContainer form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formContainer label {
+  margin-bottom: 10px;
+}
+
+.formContainer input[type="text"],
+.formContainer input[type="number"],
+.formContainer textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%; /* Set width to 100% */
+}
+
+.formContainer button {
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.formContainer button.cancel {
+  background-color: transparent;
+  color: #000;
+  transition: 0.3s;
+}
+
+.formContainer button[type="submit"] {
+  background-color: #000;
+  transition: 0.3s;
+}
+
+.formContainer button:hover,
+.formContainer button.cancel:hover {
+  background-color: transparent;
+  border-color: #000;
+  color: #000;
+  transition: 0.3s;
+}
+
+.buttonbasic {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.buttonbasic:hover {
+  transition: 0.3s;
+  background-color: transparent;
+  border-color: #000;
+  color: #000;
+}
+.productdetails .detail .actionButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.productdetails .detail .actionButtons button {
+  margin: 5px;
+}
+
+.productdetails .detail .actionButtons button.editButton {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.productdetails .detail .actionButtons button.editButton:hover {
+  background-color: #45a049;
+}
+
+.productdetails .detail .actionButtons button.removeButton {
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.productdetails .detail .actionButtons button.removeButton:hover {
+  background-color: #da190b;
+}
+.stylebutton {
+  padding: 2px;
+  margin: 2px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.stylebutton:hover {
+  transition: 0.3s;
+  background-color: transparent;
+  border-color: #000;
+  color: #000;
+}
+.upload {
+  border: none;
+}
+.sizeoptions {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.report {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
