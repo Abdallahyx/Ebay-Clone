@@ -1,0 +1,22 @@
+-- CustomerTransaction table
+CREATE TABLE IF NOT EXISTS CustomerTransaction (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  amount DECIMAL(10, 2),
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  description VARCHAR(255),
+  status VARCHAR(20) DEFAULT 'PENDING',
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+);
+
+-- StoreTransaction table
+CREATE TABLE IF NOT EXISTS StoreTransaction (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  store_id INT,
+  order_item_id INT,
+  quantity INT UNSIGNED,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(20) DEFAULT 'PENDING',
+  FOREIGN KEY (store_id) REFERENCES Store(id) ON DELETE CASCADE,
+  FOREIGN KEY (order_item_id) REFERENCES OrderItems(id) ON DELETE CASCADE
+);
