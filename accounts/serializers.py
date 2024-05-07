@@ -235,7 +235,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserShippingInfoSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source="user.full_name", read_only=True)
-    # user_email = serializers.EmailField(source="user.email", read_only=True)
+    user_email = serializers.EmailField(source="user.email", read_only=True)
     user_phone_number = serializers.CharField(
         source="user.phone_number", read_only=True
     )
