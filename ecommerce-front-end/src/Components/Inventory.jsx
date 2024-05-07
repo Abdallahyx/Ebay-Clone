@@ -132,7 +132,9 @@ function Inventory() {
     formData.append("discount", updatedProduct.discount);
     // Append other product data
 
-   
+    updatedProduct.variations.forEach((item) => {
+      formData.append("variations", JSON.stringify(item));
+    });
     const response = await fetch(
       `http://127.0.0.1:8000/store/update/${updatedProduct.slug}/`,
       {
@@ -443,6 +445,7 @@ function EditProductForm({ product, onSubmit, onCancel, onRemove }) {
   const [description, setDescription] = useState(product.description);
   const [discount, setDiscount] = useState(product.discount);
   const [photo, setImageFile] = useState(null);
+  const [variations, setVariations] = useState(product.variations);
 
   const handleSubmit = (e) => {
     e.preventDefault();
