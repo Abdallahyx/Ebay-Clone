@@ -149,7 +149,24 @@ function Inventory() {
     setShowEditForm(false);
     setEditingProduct(null);
   };
- 
+  const handleRemoveProduct = async (slug) => {
+    console.log(slug);
+    const response = await fetch(
+      `http://127.0.0.1:8000/store/delete/${slug}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    displayInventory();
+
+    setRemainingQuantity(
+      remainingQuantity.filter((product) => product.slug !== slug)
+    );
+  };
   const handleSizeChange = (event, index) => {
     console.log(event.target.value);
     console.log("f");
@@ -279,6 +296,7 @@ function AddProductForm({ onSubmit, onCancel }) {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [photo, setImageFile] = useState(null);
   const [variations, setVariations] = useState([
     { size: "default", quantity_in_stock: 0 },
   ]);
