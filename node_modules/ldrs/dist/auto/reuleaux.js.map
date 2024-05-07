@@ -1,0 +1,1 @@
+{"version":3,"file":"reuleaux.js","sources":["../../temp-ts-out/auto/reuleaux.js"],"sourcesContent":["import reuleaux from '../elements/reuleaux.js';\nreuleaux.register();\n"],"names":["reuleaux","register"],"mappings":"kGACAA,EAASC"}

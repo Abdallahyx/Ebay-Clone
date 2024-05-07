@@ -1,0 +1,1 @@
+{"version":3,"file":"dotPulse.js","sources":["../../temp-ts-out/auto/dotPulse.js"],"sourcesContent":["import dotPulse from '../elements/dotPulse.js';\ndotPulse.register();\n"],"names":["dotPulse","register"],"mappings":"yEACAA,EAASC"}

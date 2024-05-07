@@ -1,0 +1,1 @@
+{"version":3,"file":"hourglass.js","sources":["../../temp-ts-out/auto/hourglass.js"],"sourcesContent":["import hourglass from '../elements/hourglass.js';\nhourglass.register();\n"],"names":["hourglass","register"],"mappings":"0EACAA,EAAUC"}

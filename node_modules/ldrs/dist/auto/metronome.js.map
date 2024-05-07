@@ -1,0 +1,1 @@
+{"version":3,"file":"metronome.js","sources":["../../temp-ts-out/auto/metronome.js"],"sourcesContent":["import metronome from '../elements/metronome.js';\nmetronome.register();\n"],"names":["metronome","register"],"mappings":"0EACAA,EAAUC"}

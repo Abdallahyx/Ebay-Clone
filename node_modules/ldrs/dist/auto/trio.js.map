@@ -1,0 +1,1 @@
+{"version":3,"file":"trio.js","sources":["../../temp-ts-out/auto/trio.js"],"sourcesContent":["import trio from '../elements/trio.js';\ntrio.register();\n"],"names":["trio","register"],"mappings":"qEACAA,EAAKC"}

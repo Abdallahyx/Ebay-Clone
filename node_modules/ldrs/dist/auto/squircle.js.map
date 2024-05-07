@@ -1,0 +1,1 @@
+{"version":3,"file":"squircle.js","sources":["../../temp-ts-out/auto/squircle.js"],"sourcesContent":["import squircle from '../elements/squircle.js';\nsquircle.register();\n"],"names":["squircle","register"],"mappings":"kGACAA,EAASC"}

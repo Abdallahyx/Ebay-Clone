@@ -1,0 +1,1 @@
+{"version":3,"file":"trefoil.js","sources":["../../temp-ts-out/auto/trefoil.js"],"sourcesContent":["import trefoil from '../elements/trefoil.js';\ntrefoil.register();\n"],"names":["trefoil","register"],"mappings":"iGACAA,EAAQC"}

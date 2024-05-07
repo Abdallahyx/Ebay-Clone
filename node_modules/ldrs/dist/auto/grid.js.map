@@ -1,0 +1,1 @@
+{"version":3,"file":"grid.js","sources":["../../temp-ts-out/auto/grid.js"],"sourcesContent":["import grid from '../elements/grid.js';\ngrid.register();\n"],"names":["grid","register"],"mappings":"qEACAA,EAAKC"}

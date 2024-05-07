@@ -5,32 +5,71 @@ import "../Components/Productlist.css";
 import "../Components/ShopPage.css";
 import { useState, useEffect } from "react";
 
+
 function ShopPage() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]); // [electronics, clothes, sunglasses, watches
   const [searchTerm, setSearchTerm] = useState("");
   const [priceFilter, setPriceFilter] = useState({ min: "", max: "" });
   const [categoryFilter, setCategoryFilter] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
+      try{
+      const responsecategories= await fetch("http://127.0.0.1:8000/products/categories/",
+        {
+          method:"GET",
+          headers:{
+            "Content-Type":"application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          
+          }
+        }
+      )
+      if(!responsecategories.ok){
+        throw new Error("Failed to fetch categories");
+      }
+      else{
+        const datacategories = await responsecategories.json();
+        console.log("datacategories")
+        console.log(datacategories)
+        setCategories(datacategories.results);
+      }
+    }
+    catch(error){
+      console.error("Error fetching categories:", error);
+    }
+     
+      
+      let currentpage = 1;
+      let allResults = [];
+      
+        
       try {
         
-
-        const response = await fetch(`http://127.0.0.1:8000/products/?title=${searchTerm}&price_gt=${priceFilter.min}&price_lt=${priceFilter.max}&store_name=&category_name=${categoryFilter}&discount=unknown`, {
+        while(true)
+          {
+        const response = await fetch(`http://127.0.0.1:8000/products/?title=${searchTerm}&price_gt=${JSON.stringify(parseInt(priceFilter.min-0.1))}&price_lt=${priceFilter.max}&store_name=&category_name=${categoryFilter}&discount=unknown&page=${currentpage}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+        console.log(response)
         if (!response.ok) {
           throw new Error("Failed to fetch products");
+          break;
         }
         const data = await response.json();
-        setProducts(data.results);
+        allResults = allResults.concat(data.results);
+        currentpage++;
+      }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
+      setProducts(allResults);
+
     };
     fetchData();
   }, [searchTerm,priceFilter, categoryFilter]);
@@ -46,17 +85,21 @@ function ShopPage() {
       ...prevFilter,
       [name]: value,
     }));
-    console.log(priceFilter)
   };
 
   const handleCategoryFilter = (event) => {
     
     setCategoryFilter(event.target.value);
-    console.log(event.target.value)
-    console.log(categoryFilter)
+  
   };
 
-
+  const categoryOptions = ()=>{
+  
+    return (categories.map((categories)=>{
+    return <option value={categories.name}>{categories.slug}</option>
+  }
+  ))
+}
 
 
   return (
@@ -91,10 +134,10 @@ function ShopPage() {
           <div className="categoryFilter">
             <select value={categoryFilter} onChange={handleCategoryFilter}>
               <option value="">All Categories</option>
-              <option value="electronics">Electronics</option>
-              <option value="clothes">Clothes</option>
-              <option value="sunglasses">Sunglasses</option>
-              <option value="watches">Watches</option>
+              {
+                categoryOptions()
+              }
+              
             </select>
           </div>
         </div>

@@ -1,0 +1,1 @@
+{"version":3,"file":"dotSpinner.js","sources":["../../temp-ts-out/auto/dotSpinner.js"],"sourcesContent":["import dotSpinner from '../elements/dotSpinner.js';\ndotSpinner.register();\n"],"names":["dotSpinner","register"],"mappings":"2EACAA,EAAWC"}

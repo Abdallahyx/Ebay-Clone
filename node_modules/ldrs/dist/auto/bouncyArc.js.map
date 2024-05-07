@@ -1,0 +1,1 @@
+{"version":3,"file":"bouncyArc.js","sources":["../../temp-ts-out/auto/bouncyArc.js"],"sourcesContent":["import bouncyArc from '../elements/bouncyArc.js';\nbouncyArc.register();\n"],"names":["bouncyArc","register"],"mappings":"0EACAA,EAAUC"}

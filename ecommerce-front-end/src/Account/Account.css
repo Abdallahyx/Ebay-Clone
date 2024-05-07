@@ -95,3 +95,9 @@ h4
 .components a{
     color: black;
 }
+.removeall
+{
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}

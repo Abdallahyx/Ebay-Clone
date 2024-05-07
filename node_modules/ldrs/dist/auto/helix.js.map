@@ -1,0 +1,1 @@
+{"version":3,"file":"helix.js","sources":["../../temp-ts-out/auto/helix.js"],"sourcesContent":["import helix from '../elements/helix.js';\nhelix.register();\n"],"names":["helix","register"],"mappings":"sEACAA,EAAMC"}

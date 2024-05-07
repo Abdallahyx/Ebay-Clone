@@ -1,0 +1,1 @@
+{"version":3,"file":"superballs.js","sources":["../../temp-ts-out/auto/superballs.js"],"sourcesContent":["import superballs from '../elements/superballs.js';\nsuperballs.register();\n"],"names":["superballs","register"],"mappings":"2EACAA,EAAWC"}

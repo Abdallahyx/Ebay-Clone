@@ -1,0 +1,1 @@
+{"version":3,"file":"wobble.js","sources":["../../temp-ts-out/auto/wobble.js"],"sourcesContent":["import wobble from '../elements/wobble.js';\nwobble.register();\n"],"names":["wobble","register"],"mappings":"uEACAA,EAAOC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ripples.js","sources":["../../temp-ts-out/auto/ripples.js"],"sourcesContent":["import ripples from '../elements/ripples.js';\nripples.register();\n"],"names":["ripples","register"],"mappings":"wEACAA,EAAQC"}

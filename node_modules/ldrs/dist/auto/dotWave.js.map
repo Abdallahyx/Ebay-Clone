@@ -1,0 +1,1 @@
+{"version":3,"file":"dotWave.js","sources":["../../temp-ts-out/auto/dotWave.js"],"sourcesContent":["import dotWave from '../elements/dotWave.js';\ndotWave.register();\n"],"names":["dotWave","register"],"mappings":"wEACAA,EAAQC"}

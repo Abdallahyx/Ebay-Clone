@@ -1,0 +1,1 @@
+{"version":3,"file":"tailChase.js","sources":["../../temp-ts-out/auto/tailChase.js"],"sourcesContent":["import tailChase from '../elements/tailChase.js';\ntailChase.register();\n"],"names":["tailChase","register"],"mappings":"0EACAA,EAAUC"}

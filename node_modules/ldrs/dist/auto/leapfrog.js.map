@@ -1,0 +1,1 @@
+{"version":3,"file":"leapfrog.js","sources":["../../temp-ts-out/auto/leapfrog.js"],"sourcesContent":["import leapfrog from '../elements/leapfrog.js';\nleapfrog.register();\n"],"names":["leapfrog","register"],"mappings":"yEACAA,EAASC"}

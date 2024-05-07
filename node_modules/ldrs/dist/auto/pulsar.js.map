@@ -1,0 +1,1 @@
+{"version":3,"file":"pulsar.js","sources":["../../temp-ts-out/auto/pulsar.js"],"sourcesContent":["import pulsar from '../elements/pulsar.js';\npulsar.register();\n"],"names":["pulsar","register"],"mappings":"uEACAA,EAAOC"}

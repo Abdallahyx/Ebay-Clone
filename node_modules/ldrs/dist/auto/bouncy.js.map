@@ -1,0 +1,1 @@
+{"version":3,"file":"bouncy.js","sources":["../../temp-ts-out/auto/bouncy.js"],"sourcesContent":["import bouncy from '../elements/bouncy.js';\nbouncy.register();\n"],"names":["bouncy","register"],"mappings":"uEACAA,EAAOC"}
