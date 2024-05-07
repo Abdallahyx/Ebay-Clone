@@ -1,0 +1,21 @@
+-- Coupons table
+CREATE TABLE IF NOT EXISTS Coupons (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  coupon VARCHAR(16),
+  product_id INT,
+  discount SMALLINT UNSIGNED DEFAULT 1,
+  drop_chance SMALLINT UNSIGNED DEFAULT 1,
+  FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE
+);
+
+-- UserCoupons table
+CREATE TABLE IF NOT EXISTS UserCoupons (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  coupon_id INT,
+  user_id INT,
+  started_at DATE DEFAULT CURRENT_TIMESTAMP,
+  valid_to DATE,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (coupon_id) REFERENCES Coupons(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+);

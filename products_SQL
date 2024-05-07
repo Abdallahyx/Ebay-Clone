@@ -1,0 +1,54 @@
+-- Category table
+CREATE TABLE IF NOT EXISTS Category (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  parent_id INT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  photo VARCHAR(255),
+  FOREIGN KEY (parent_id) REFERENCES Category(id) ON DELETE CASCADE
+);
+
+-- Product table
+CREATE TABLE IF NOT EXISTS Product (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  store_id INT NOT NULL,
+  category_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255),
+  price INT DEFAULT 0,
+  description TEXT,
+  photo VARCHAR(255),
+  discount INT DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  rating DECIMAL(3, 1) DEFAULT 0,
+  FOREIGN KEY (store_id) REFERENCES Store(id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES Category(id) ON DELETE RESTRICT
+);
+
+-- ProductImage table
+CREATE TABLE IF NOT EXISTS ProductImage (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  image VARCHAR(255) DEFAULT 'images/default.png',
+  is_featured BOOLEAN DEFAULT FALSE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE
+);
+
+-- ProductVariation table
+CREATE TABLE IF NOT EXISTS ProductVariation (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  size VARCHAR(20),
+  quantity_in_stock INT DEFAULT 0,
+  quantity_sold INT DEFAULT 0,
+  stock_date DATETIME,
+  last_sales_date DATETIME,
+  availability_status INT DEFAULT 4,
+  FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE,
+  CONSTRAINT uc_product_variation UNIQUE (product_id, size)
+);

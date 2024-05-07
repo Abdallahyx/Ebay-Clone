@@ -1,0 +1,30 @@
+-- Order table
+CREATE TABLE IF NOT EXISTS Order (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  order_status INT DEFAULT 1,
+  total_amount INT DEFAULT 0,
+  coupon_id INT,
+  shipping_info_id INT,
+  payment_method INT DEFAULT 1,
+  activate_balance BOOLEAN DEFAULT FALSE,
+  comment TEXT(1000),
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+  FOREIGN KEY (coupon_id) REFERENCES UserCoupons(id) ON DELETE SET NULL,
+  FOREIGN KEY (shipping_info_id) REFERENCES UserShippingInfo(id) ON DELETE SET NULL
+);
+
+-- OrderItems table
+CREATE TABLE IF NOT EXISTS OrderItems (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT,
+  product_id INT,
+  quantity INT DEFAULT 0,
+  total_price INT DEFAULT 0,
+  store_id INT,
+  product_variation_id INT,
+  FOREIGN KEY (order_id) REFERENCES Order(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE CASCADE,
+  FOREIGN KEY (store_id) REFERENCES Store(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_variation_id) REFERENCES ProductVariation(id) ON DELETE CASCADE
+);
