@@ -164,3 +164,29 @@ h1 {
   padding: 5px;
   font-size: 16px; /* Adjust as needed */
 }
+
+.actions button {
+  background-color: #000;
+  width: 75%;
+  color: #fff;
+  border: none;
+  padding: 8px 16px; /* Adjust as needed */
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: normal;
+  font-size: 18px; /* Adjust as needed */
+}
+
+.add-to-cart {
+  font-weight: bold;
+}
+
+.buy-paypal {
+  background-color: #ffc439;
+  color: #000;
+}
+
+.more-options {
+  color: blue;
+  text-decoration: underline;
+}
