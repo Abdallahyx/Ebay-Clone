@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS Store (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  store_name VARCHAR(200),
+  store_address VARCHAR(200),
+  store_city VARCHAR(100),
+  store_country VARCHAR(100),
+  store_phone_number VARCHAR(15),
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+);
+
+-- UserToken table
+CREATE TABLE IF NOT EXISTS UserToken (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  token VARCHAR(32) UNIQUE,
+  token_type VARCHAR(2),
+  token_owner VARCHAR(255),
+  created DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expired BOOLEAN DEFAULT FALSE
+);
+
+-- UserBalance table
+CREATE TABLE IF NOT EXISTS UserBalance (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNIQUE,
+  balance DECIMAL(10, 2) DEFAULT 0.0,
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+);
+
+-- UserShippingInfo table
+CREATE TABLE IF NOT EXISTS UserShippingInfo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  address VARCHAR(200),
+  city VARCHAR(100),
+  country VARCHAR(100),
+  FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
+);
