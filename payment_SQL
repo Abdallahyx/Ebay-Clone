@@ -1,0 +1,12 @@
+-- PaymentInfo table
+CREATE TABLE IF NOT EXISTS PaymentInfo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT,
+  shipping_info_id INT,
+  payment_method INT,
+  payment_amount INT DEFAULT 0,
+  payment_date DATETIME,
+  is_paid BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (order_id) REFERENCES Order(id) ON DELETE CASCADE,
+  FOREIGN KEY (shipping_info_id) REFERENCES UserShippingInfo(id) ON DELETE SET NULL
+);
