@@ -8,21 +8,14 @@ class CustomTokenAuthentication(TokenAuthentication):
     def authenticate(self, request):
         # Try to get the token from the 'Authorization' header
         auth = get_authorization_header(request).split()
+        print(auth)
         if not auth or auth[0].lower() != b"token":
             # If the token is not in the header, try to get it from the cookie
             token = request.COOKIES.get("token")
             if not token:
-                # If the token is not in the cookie, try to get it from the URL parameters
-                token = request.query_params.get("usertoken")
-                if not token:
-                    return None
-            try:
-                token_obj = (
-                    self.get_model().objects.select_related("user").get(key=token)
-                )
-                return token_obj.user, token
-            except self.get_model().DoesNotExist:
-                raise AuthenticationFailed(_("Invalid token."))
+                return None
+            token_obj = self.get_model().objects.select_related("user").get(key=token)
+            return token_obj.user, token
 
         if len(auth) == 1:
             msg = _("Invalid token header. No credentials provided.")
