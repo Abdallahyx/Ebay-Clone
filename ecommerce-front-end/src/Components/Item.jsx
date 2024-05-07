@@ -6,14 +6,15 @@ import img2 from "../SVGs/hmgoepprod3.webp"; // Import additional images here
 function Item(props) {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Index of the current image
-  const [selectedSize, setSelectedSize] = useState(""); // State to hold selected size
+  const [selectedSize, setSelectedSize] = useState("default"); // State to hold selected size
   const [item, setItem] = useState({}); // State to hold item data
   const imageList = [img1, img2]; // Array of image sources
 
   const getProduct = async () => {
  
-    const response = await fetch(`http://127.0.0.1:8000/products/${props.slug}/`);
+    const response = await fetch(`http://127.0.0.1:8000/products/product/${props.slug}/`);
     const data = await response.json();
+    console.log(data);
     const fullproduct = {
       'title': data.title,
       'price': data.price,
@@ -38,7 +39,6 @@ function Item(props) {
     },
   })
   const data = await response.json();
-  console.log(data);
   }
 
   useEffect(() => {
@@ -72,6 +72,7 @@ function Item(props) {
   };
 
   const handleSizeSelect = (size) => {
+
     setSelectedSize(size);
   };
 
@@ -82,7 +83,7 @@ function Item(props) {
         <p className="price">
           <span className="discounted-price">${item.discount}</span>
           <span className="original-price">${item.price}</span>
-          <span className="discount">20% OFF</span>
+          
         </p>
         <div className="color-option">
           <span>Color</span>
