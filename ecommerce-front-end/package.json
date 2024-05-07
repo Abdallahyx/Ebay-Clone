@@ -12,7 +12,10 @@
     "react-loader-spinner": "^6.1.6",
     "react-scripts": "5.0.1",
     "react-spring": "^9.7.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "bootstrap": "^5.3.3",
+    "ldrs": "^1.0.1",
+    "react-router-dom": "^6.22.3"
   },
   "scripts": {
     "start": "react-scripts start",
