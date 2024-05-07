@@ -20,6 +20,7 @@ import PaymentHistory from "./Pages/PaymentHistory";
 import Loader from "./Components/Loader"; // Import your Loader component
 import NavigationListener from "./Components/NavigationListener";
 import SuccessBalanceAdd from "./Pages/SuccessBalanceAdd";
+import PayBalanceSuccess from "./Pages/PayBalanceSuccess";
 import { useState, useEffect } from "react";
 const token = localStorage.getItem("token");
 function App() {
@@ -60,6 +61,7 @@ function App() {
       <Route path="/paymenthistory" element={<PaymentHistory />} />
       <Route path="/success/*" element={<SuccessPage token={token}/>} />
       <Route path="/successbalance/*" element={<SuccessBalanceAdd />} />
+      <Route path="/paybalancesuccess" element={<PayBalanceSuccess />} />
     </Routes>}
       
     </BrowserRouter>

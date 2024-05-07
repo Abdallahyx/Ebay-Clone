@@ -80,7 +80,7 @@ useEffect(() => {getPhotos()},[])*/
         if(formObject.payment_method==2 || formObject.payment_method==1)
           {
             console.log("payment successful")
-            navigate("/success")
+            navigate("/paybalancesuccess")
           }
           else
           {
