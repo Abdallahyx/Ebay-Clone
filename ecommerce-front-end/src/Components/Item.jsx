@@ -83,6 +83,7 @@ function Item(props) {
         <p className="price">
           <span className="discounted-price">${item.discount}</span>
           <span className="original-price">${item.price}</span>
+          {100*(item.price-item.discount)/item.price === 0?null:<span className="discount">{parseInt(100*(item.price-item.discount)/item.price)}% OFF</span>}
           
         </p>
         <div className="color-option">
