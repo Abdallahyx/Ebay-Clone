@@ -46,7 +46,7 @@ The Django server will start running at `http://localhost:8000`.
 1. Navigate to the frontend directory:
 
 ```bash
-cd your-repo-name/frontend
+cd ecommerce-front-end
 ```
 
 2. Install the required Node.js dependencies:
