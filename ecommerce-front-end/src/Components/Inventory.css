@@ -136,13 +136,11 @@
   background-color: transparent;
   color: #000;
   transition: 0.3s;
-
 }
 
 .formContainer button[type="submit"] {
   background-color: #000;
   transition: 0.3s;
-
 }
 
 .formContainer button:hover,
@@ -151,11 +149,9 @@
   border-color: #000;
   color: #000;
   transition: 0.3s;
-
 }
 
-.buttonbasic
-{
+.buttonbasic {
   padding: 10px;
   margin: 10px;
   border: 1px solid transparent;
@@ -165,8 +161,7 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.buttonbasic:hover
-{
+.buttonbasic:hover {
   transition: 0.3s;
   background-color: transparent;
   border-color: #000;
@@ -183,7 +178,7 @@
 }
 
 .productdetails .detail .actionButtons button.editButton {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50; /* Green */
   border: none;
   color: white;
   padding: 10px 20px;
@@ -215,9 +210,8 @@
 .productdetails .detail .actionButtons button.removeButton:hover {
   background-color: #da190b;
 }
-.stylebutton
-{
-  padding:2px;
+.stylebutton {
+  padding: 2px;
   margin: 2px;
   border: 1px solid transparent;
   border-radius: 2px;
@@ -226,19 +220,16 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.stylebutton:hover
-{
+.stylebutton:hover {
   transition: 0.3s;
   background-color: transparent;
   border-color: #000;
   color: #000;
 }
-.upload
-{
+.upload {
   border: none;
 }
-.sizeoptions
-{
+.sizeoptions {
   padding: 5px;
   margin: 5px;
   border: 1px solid transparent;
@@ -247,4 +238,9 @@
   color: #fff;
   cursor: pointer;
   transition: 0.3s;
+}
+.report {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
