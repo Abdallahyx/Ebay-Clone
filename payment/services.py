@@ -58,8 +58,8 @@ def paypal_create_order(value, order_id):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:3000/success/{order_id}/",
-                "cancel_url": f"http://127.0.0.1:3000/success/{order_id}/",
+                "return_url": f"http://localhost:3000/success/{order_id}/",
+                "cancel_url": f"http://localhost:3000/success/{order_id}/",
             },
         }
     )
@@ -118,8 +118,8 @@ def paypal_add_balance(value):
                 }
             ],
             "redirect_urls": {
-                "return_url": f"http://127.0.0.1:8000/payments/user/add-balance/complete/?value={str(value)}",
-                "cancel_url": f"http://127.0.0.1:8000/payments/user/add-balance/complete/?value={str(value)}",
+                "return_url": f"http://localhost:3000/successbalance/?value={str(value)}",
+                "cancel_url": f"http://localhost:3000/successbalance/?value={str(value)}",
             },
         }
     )
