@@ -95,15 +95,3 @@ h4
 .components a{
     color: black;
 }
-.linkss
-{
-    display: flex;
-    flex-direction: row;
-
-}
-.linkss a
-{
-    margin: 10px;
-    padding: 10px;
-
-}

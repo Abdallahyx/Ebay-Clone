@@ -4,35 +4,3 @@
     flex-direction: column;
     margin-top: 20px;
 }
-.success-page {
-    display: flex; /* Center the content vertically and horizontally */
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ensure content fills the viewport height */
-    background-color: #f5f5f5; /* Light background for better contrast */
-    font-family: sans-serif; /* Default font stack */
-  }
-  
-  .success-container {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    background-color: #fff; /* White background for content */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    width: 400px; /* Limit content width for clarity */
-    max-width: 80%; /* Responsive sizing for smaller screens */
-  }
-  
-  .success-message {
-    text-align: center;
-    color: #333; /* Darker text for better legibility */
-  }
-  
-  .success-message h2 {
-    margin-bottom: 10px; /* Spacing between heading and subheading */
-    font-size: 24px; /* Larger heading size for emphasis */
-  }
-  
-  .success-message h3 {
-    font-size: 18px; /* Slightly smaller subheading size */
-  }

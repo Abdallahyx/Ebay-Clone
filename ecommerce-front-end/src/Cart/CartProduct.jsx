@@ -21,7 +21,6 @@ function CartProduct(props) {
         Authorization: `Token ${localStorage.getItem("token")}`,
       },
     });
-
     const data = await response.json();
     await setCartItems(data.items);
     await setTotalPrice(data.total_amount);
@@ -40,60 +39,8 @@ function CartProduct(props) {
   }
 }
 useEffect(() => {getPhotos()},[])*/
-  const proceedToCheckout = async (e) => {
-    e.preventDefault();
-    const form = e.target.form;
-    const formData = new FormData(form);
-    const formObject = {};
-    for (let [key, value] of formData.entries()) {
-      formObject[key] = value;
-    }
-    formObject["activate_balance"] = false;
-    formObject["coupon"] = null;
-    formObject["comment"] = "";
-    const shippinginfo = await fetch(
-      "http://127.0.0.1:8000/accounts/profile/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    const profileinfo = await shippinginfo.json();
-    console.log(profileinfo.shipping_info);
-    formObject["shipping_info"] = profileinfo.shipping_info;
-    console.log(formObject);
-    console.log("payment method")
-    console.log(formObject.payment_method)
-    const response = await fetch("http://127.0.0.1:8000/orders/checkout/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(formObject),
-    });
-    
-    if(response.ok)
-      {
-        if(formObject.payment_method==2 || formObject.payment_method==1)
-          {
-            console.log("payment successful")
-            navigate("/success")
-          }
-          else
-          {
-            const data = await response.json();
-            console.log(data);
-            window.location.href=data.payment_link
-
-            
-          }
-        }
-
-      
-    
+  const proceedToCheckout = () => {
+    navigate("/checkout");
   };
   const truck = (
     <svg
@@ -116,6 +63,7 @@ useEffect(() => {getPhotos()},[])*/
 
   // Function to handle addition of quantity for a specific product
   const handleAdd = async (slug, size) => {
+    
     const response2 = await fetch(
       `http://127.0.0.1:8000/cart/add_quantity/${slug}/${size}/`,
       {
@@ -132,6 +80,7 @@ useEffect(() => {getPhotos()},[])*/
 
   // Function to handle subtraction of quantity for a specific product
   const handleSubtract = async (slug, size) => {
+    
     const response2 = await fetch(
       `http://127.0.0.1:8000/cart/minus_quantity/${slug}/${size}/`,
       {
@@ -206,20 +155,23 @@ useEffect(() => {getPhotos()},[])*/
     return cart;
   };
   const handleClearCart = async () => {
-    const response = await fetch("http://127.0.0.1:8000/cart/clear/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
-      },
-    });
+    const response = await fetch("http://127.0.0.1:8000/cart/clear/",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+        }
+    );
     const data = await response.json();
     console.log(data);
     displayCart();
-  };
+    }
+
+  
 
   props.passPrice(calculateSubtotal());
-  console.log();
   return (
     <div className="cartPage">
       <div className="cartTitle">
@@ -238,13 +190,11 @@ useEffect(() => {getPhotos()},[])*/
 
           {renderProduct()}
           <div className="clearCart">
-            <button onClick={handleClearCart} className="buttonbasic">
-              Clear Cart
-            </button>
+            <button onClick={handleClearCart}className="buttonbasic">Clear Cart</button>
           </div>
         </div>
 
-        <form className="checkout">
+        <div className="checkout">
           <div className="truck">{truck}</div>
           <p>
             Buy <s>$75.00 </s>more to enjoy Free Shipping
@@ -257,24 +207,15 @@ useEffect(() => {getPhotos()},[])*/
             <h3>${totalPrice}</h3>
           </div>
           <p>Taxes and shipping calculated at checkout</p>
-          <div className="Paymentmethod">
-            <p>Choose Your Payment Method</p>
-            <select name="payment_method">
-              <option value={3}>Paypal</option>
-              <option value={2}>Balance</option>
-              <option value={1}>Cash</option>
-            </select>
-          </div>
           <div className="discount">
             <input type="text" placeholder="Discount code" />
             <button>Apply</button>
           </div>
           <div className="checkoutt">
-            <button type="submit" onClick={proceedToCheckout}>
-              Proceed to checkout
-            </button>
+            <button onClick={proceedToCheckout}>Proceed to checkout</button>
           </div>
-        </form>
+         
+        </div>
       </div>
     </div>
   );

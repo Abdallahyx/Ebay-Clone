@@ -1,62 +1,24 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "../Components/Inventory.css";
-let categories = [];
-const displayCategories = async () => {
-  try {
-    const responsecategories = await fetch(
-      "http://127.0.0.1:8000/products/categories/",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    if (!responsecategories.ok) {
-      throw new Error("Failed to fetch categories");
-    } else {
-      const datacategories = await responsecategories.json();
-      categories = datacategories.results;
-    }
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-};
-const categoryOptions = () => {
-  return categories.map((categories) => {
-    return <option value={categories.id}>{categories.slug}</option>;
-  });
-};
-displayCategories();
+
 function Inventory() {
   const [remainingQuantity, setRemainingQuantity] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [size, setSize] = useState([]);
+  const [size, setSize] = useState(0);
 
   const displayInventory = async () => {
-    let currentPage = 1;
-    let allResults = [];
-    while (true) {
-      const response = await fetch(
-        `http://127.0.0.1:8000/store/inventory/?page=${currentPage}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Token ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        break;
-      }
-      const data = await response.json();
-      allResults = allResults.concat(data.results);
-      currentPage++;
-    }
-    await setRemainingQuantity(allResults);
+    const response = await fetch("http://127.0.0.1:8000/store/inventory/", {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+
+    await setRemainingQuantity(data.results);
+    console.log(remainingQuantity);
   };
   useEffect(() => {
     displayInventory();
@@ -76,8 +38,7 @@ function Inventory() {
   };
 
   const handleAddProduct = async (newProduct) => {
-    console.log("validate");
-    console.log(newProduct.category);
+     
     const formData = new FormData();
     formData.append("title", newProduct.title);
     formData.append("category", newProduct.category);
@@ -86,12 +47,14 @@ function Inventory() {
     formData.append("description", newProduct.description);
     formData.append("discount", newProduct.discount);
     formData.append("photo", newProduct.photo);
+    // Append other product data
   
-    newProduct.variations.forEach((item) => {
-      formData.append("variations", JSON.stringify(item));
+    newProduct.variations.forEach(item => {
+      formData.append('variations',JSON.stringify(item));
     });
+    console.log('caasdasd')
     console.log(newProduct.variations);
-    console.log(formData);
+  console.log(formData);
     const response = await fetch("http://127.0.0.1:8000/store/create/", {
       method: "POST",
       headers: {
@@ -131,25 +94,27 @@ function Inventory() {
     formData.append("description", updatedProduct.description);
     formData.append("discount", updatedProduct.discount);
     // Append other product data
-
-    updatedProduct.variations.forEach((item) => {
-      formData.append("variations", JSON.stringify(item));
+  
+    updatedProduct.variations.forEach(item => {
+      formData.append('variations',JSON.stringify(item));
     });
-    const response = await fetch(
-      `http://127.0.0.1:8000/store/update/${updatedProduct.slug}/`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Token ${localStorage.getItem("token")}`,
-        },
-        body: formData,
-      }
-    );
-    displayInventory();
-    console.log("response");
-    console.log(await response.json());
+    const response= await fetch(`http://127.0.0.1:8000/store/update/${updatedProduct.slug}/`,
+  {
+    method: "PUT",
+    headers: {
+      Authorization: `Token ${localStorage.getItem("token")}`,
+     
+    },
+    body: formData,
+  }
+  )
+  displayInventory();
+  console.log("response");
+  console.log(await response.json());
     setShowEditForm(false);
     setEditingProduct(null);
+    
+
   };
   const handleRemoveProduct = async (slug) => {
     console.log(slug);
@@ -169,19 +134,10 @@ function Inventory() {
       remainingQuantity.filter((product) => product.slug !== slug)
     );
   };
-  const handleSizeChange = (event, index) => {
-    console.log(event.target.value);
-    console.log("f");
-    console.log(index);
-    let siz = Array(size.length).fill(0);
-    for (let i = 0; i < size.length; i++) {
-      if (size[i]) {
-        siz[i] = size[i];
-      }
-    }
-    siz[index] = event.target.value;
-    setSize(siz);
-  };
+  const handleSizeChange = (event) => {
+    setSize(event.target.value);
+
+  }
   return (
     <div className="justifywrapper">
       <h1>Inventory</h1>
@@ -217,48 +173,20 @@ function Inventory() {
               )}
               {/* Ensure that img attribute is used */}
             </div>
-            <p className="detail">
-              {product.title}
-              {product.variations.length > 1 ? (
-                <select
-                  onChange={(event) => {
-                    handleSizeChange(event, index);
-                  }}
-                  className="sizeoptions"
-                >
-                  {product.variations.map((variation, i) => {
-                    return (
-                      <option value={i} key={i}>
-                        {variation.size}
-                      </option>
-                    );
-                  })}
-                </select>
-              ) : (
-                ""
-              )}
-            </p>
-            <p className="detail">${product.price_with_discount}</p>
-            <p className="detail sold">
-              {product.variations.length > 1
-                ? size[index]
-                  ? product.variations[size[index]].quantity_sold
-                  : product.variations[0].quantity_sold
-                : product.variations[0].quantity_sold}
-            </p>
-            {product.variations[size[index] ? size[index] : 0]
-              .quantity_in_stock === 0 ? (
+            <p className="detail">{product.title}{product.variations.length>1?<select onChange={handleSizeChange} className="sizeoptions">
+              {product.variations.map((variation, index) => {
+                return <option value={index} key={index}>{variation.size}</option>;
+              })}
+
+              </select>:""}</p>
+            <p className="detail">${product.price.toFixed(2)}</p>
+            <p className="detail sold">Sold Quantity</p>
+            {product.variations[0].quantity_in_stock === 0 ? (
               <p className="detail remaining">Sold out!</p>
             ) : (
-              <p className="detail remaining">
-                {product.variations.length > 1
-                  ? size[index]
-                    ? product.variations[size[index]].quantity_in_stock
-                    : product.variations[0].quantity_in_stock
-                  : product.variations[0].quantity_in_stock}
-              </p>
+              <p className="detail remaining">{product.variations.length>1?product.variations[size].quantity_in_stock:product.variations[0].quantity_in_stock}</p>
             )}
-
+         
             <div className="detail actionButtons">
               <button
                 className="editButton stylebutton"
@@ -299,9 +227,8 @@ function AddProductForm({ onSubmit, onCancel }) {
   const [description, setDescription] = useState("");
   const [discount, setDiscount] = useState(0);
   const [photo, setImageFile] = useState(null);
-  const [variations, setVariations] = useState([
-    { size: "default", quantity_in_stock: 0 },
-  ]);
+  const [variations, setVariations] = useState([{ size: "default", quantity_in_stock: 0 }]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newProduct = {
@@ -359,10 +286,12 @@ function AddProductForm({ onSubmit, onCancel }) {
           />
         </label>
         <label>
-          <select onChange={(e) => setCategory(e.target.value)}>
-            <option value="">All Categories</option>
-            {categoryOptions()}
-          </select>
+          Category:
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
         </label>
         <label>
           Slug:
@@ -492,10 +421,12 @@ function EditProductForm({ product, onSubmit, onCancel, onRemove }) {
           />
         </label>
         <label>
-          <select>
-            <option value="">All Categories</option>
-            {categoryOptions()}
-          </select>
+          Category:
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
         </label>
         <label>
           Slug:
