@@ -1,0 +1,1 @@
+{"version":3,"file":"momentum.js","sources":["../../temp-ts-out/auto/momentum.js"],"sourcesContent":["import momentum from '../elements/momentum.js';\nmomentum.register();\n"],"names":["momentum","register"],"mappings":"yEACAA,EAASC"}

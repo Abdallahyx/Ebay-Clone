@@ -1,0 +1,1 @@
+{"version":3,"file":"treadmill.js","sources":["../../temp-ts-out/auto/treadmill.js"],"sourcesContent":["import treadmill from '../elements/treadmill.js';\ntreadmill.register();\n"],"names":["treadmill","register"],"mappings":"0EACAA,EAAUC"}

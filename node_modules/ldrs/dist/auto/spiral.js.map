@@ -1,0 +1,1 @@
+{"version":3,"file":"spiral.js","sources":["../../temp-ts-out/auto/spiral.js"],"sourcesContent":["import spiral from '../elements/spiral.js';\nspiral.register();\n"],"names":["spiral","register"],"mappings":"uEACAA,EAAOC"}

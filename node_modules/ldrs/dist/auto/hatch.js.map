@@ -1,0 +1,1 @@
+{"version":3,"file":"hatch.js","sources":["../../temp-ts-out/auto/hatch.js"],"sourcesContent":["import hatch from '../elements/hatch.js';\nhatch.register();\n"],"names":["hatch","register"],"mappings":"sEACAA,EAAMC"}

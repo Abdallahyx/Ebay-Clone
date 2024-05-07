@@ -1,0 +1,1 @@
+{"version":3,"file":"miyagi.js","sources":["../../temp-ts-out/auto/miyagi.js"],"sourcesContent":["import miyagi from '../elements/miyagi.js';\nmiyagi.register();\n"],"names":["miyagi","register"],"mappings":"uEACAA,EAAOC"}

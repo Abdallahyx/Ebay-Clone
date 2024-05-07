@@ -1,0 +1,1 @@
+{"version":3,"file":"jelly.js","sources":["../../temp-ts-out/auto/jelly.js"],"sourcesContent":["import jelly from '../elements/jelly.js';\njelly.register();\n"],"names":["jelly","register"],"mappings":"sEACAA,EAAMC"}

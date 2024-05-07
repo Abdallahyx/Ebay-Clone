@@ -1,0 +1,1 @@
+{"version":3,"file":"pinwheel.js","sources":["../../temp-ts-out/auto/pinwheel.js"],"sourcesContent":["import pinwheel from '../elements/pinwheel.js';\npinwheel.register();\n"],"names":["pinwheel","register"],"mappings":"yEACAA,EAASC"}

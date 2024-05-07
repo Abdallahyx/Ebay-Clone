@@ -1,0 +1,1 @@
+{"version":3,"file":"tailspin.js","sources":["../../temp-ts-out/auto/tailspin.js"],"sourcesContent":["import tailspin from '../elements/tailspin.js';\ntailspin.register();\n"],"names":["tailspin","register"],"mappings":"yEACAA,EAASC"}

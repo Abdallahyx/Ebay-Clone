@@ -1,0 +1,1 @@
+{"version":3,"file":"newtonsCradle.js","sources":["../../temp-ts-out/auto/newtonsCradle.js"],"sourcesContent":["import newtonsCradle from '../elements/newtonsCradle.js';\nnewtonsCradle.register();\n"],"names":["newtonsCradle","register"],"mappings":"8EACAA,EAAcC"}

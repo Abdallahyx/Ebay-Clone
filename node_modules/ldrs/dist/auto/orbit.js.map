@@ -1,0 +1,1 @@
+{"version":3,"file":"orbit.js","sources":["../../temp-ts-out/auto/orbit.js"],"sourcesContent":["import orbit from '../elements/orbit.js';\norbit.register();\n"],"names":["orbit","register"],"mappings":"sEACAA,EAAMC"}

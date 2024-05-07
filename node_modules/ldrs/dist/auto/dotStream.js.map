@@ -1,0 +1,1 @@
+{"version":3,"file":"dotStream.js","sources":["../../temp-ts-out/auto/dotStream.js"],"sourcesContent":["import dotStream from '../elements/dotStream.js';\ndotStream.register();\n"],"names":["dotStream","register"],"mappings":"0EACAA,EAAUC"}

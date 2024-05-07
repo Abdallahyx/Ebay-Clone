@@ -1,0 +1,1 @@
+{"version":3,"file":"chaoticOrbit.js","sources":["../../temp-ts-out/auto/chaoticOrbit.js"],"sourcesContent":["import chaoticOrbit from '../elements/chaoticOrbit.js';\nchaoticOrbit.register();\n"],"names":["chaoticOrbit","register"],"mappings":"6EACAA,EAAaC"}

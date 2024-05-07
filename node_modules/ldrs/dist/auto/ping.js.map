@@ -1,0 +1,1 @@
+{"version":3,"file":"ping.js","sources":["../../temp-ts-out/auto/ping.js"],"sourcesContent":["import ping from '../elements/ping.js';\nping.register();\n"],"names":["ping","register"],"mappings":"qEACAA,EAAKC"}

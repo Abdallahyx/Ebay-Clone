@@ -1,0 +1,1 @@
+{"version":3,"file":"square.js","sources":["../../temp-ts-out/auto/square.js"],"sourcesContent":["import square from '../elements/square.js';\nsquare.register();\n"],"names":["square","register"],"mappings":"uEACAA,EAAOC"}

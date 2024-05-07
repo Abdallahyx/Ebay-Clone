@@ -1,0 +1,1 @@
+{"version":3,"file":"mirage.js","sources":["../../temp-ts-out/auto/mirage.js"],"sourcesContent":["import mirage from '../elements/mirage.js';\nmirage.register();\n"],"names":["mirage","register"],"mappings":"uEACAA,EAAOC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"infinity.js","sources":["../../temp-ts-out/auto/infinity.js"],"sourcesContent":["import infinity from '../elements/infinity.js';\ninfinity.register();\n"],"names":["infinity","register"],"mappings":"kGACAA,EAASC"}

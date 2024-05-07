@@ -1,0 +1,1 @@
+{"version":3,"file":"ring2.js","sources":["../../temp-ts-out/auto/ring2.js"],"sourcesContent":["import ring2 from '../elements/ring2.js';\nring2.register();\n"],"names":["ring2","register"],"mappings":"sEACAA,EAAMC"}

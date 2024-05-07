@@ -1,0 +1,1 @@
+{"version":3,"file":"lineSpinner.js","sources":["../../temp-ts-out/auto/lineSpinner.js"],"sourcesContent":["import lineSpinner from '../elements/lineSpinner.js';\nlineSpinner.register();\n"],"names":["lineSpinner","register"],"mappings":"4EACAA,EAAYC"}

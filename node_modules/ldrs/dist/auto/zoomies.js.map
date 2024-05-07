@@ -1,0 +1,1 @@
+{"version":3,"file":"zoomies.js","sources":["../../temp-ts-out/auto/zoomies.js"],"sourcesContent":["import zoomies from '../elements/zoomies.js';\nzoomies.register();\n"],"names":["zoomies","register"],"mappings":"wEACAA,EAAQC"}

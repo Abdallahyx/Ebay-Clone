@@ -1,0 +1,1 @@
+{"version":3,"file":"jellyTriangle.js","sources":["../../temp-ts-out/auto/jellyTriangle.js"],"sourcesContent":["import jellyTriangle from '../elements/jellyTriangle.js';\njellyTriangle.register();\n"],"names":["jellyTriangle","register"],"mappings":"8EACAA,EAAcC"}

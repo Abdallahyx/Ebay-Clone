@@ -1,0 +1,1 @@
+{"version":3,"file":"lineWobble.js","sources":["../../temp-ts-out/auto/lineWobble.js"],"sourcesContent":["import lineWobble from '../elements/lineWobble.js';\nlineWobble.register();\n"],"names":["lineWobble","register"],"mappings":"2EACAA,EAAWC"}

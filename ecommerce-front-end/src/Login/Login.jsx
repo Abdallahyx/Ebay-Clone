@@ -2,6 +2,13 @@ import "./Login.css";
 import Logo from "../SVGs/Logo.svg";
 import { useNavigate } from "react-router-dom";
 import {useState} from "react";
+function setCookie(name, value, days) {
+  const expirationDate = new Date();
+  expirationDate.setDate(expirationDate.getDate() + days);
+  const expires = ";expires=" + expirationDate.toUTCString();
+  const domain = ".localhost"; // Set domain to a common base domain
+  document.cookie = name + "=" + value + expires + ";path=/;domain=" + domain;
+}
 function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -59,6 +66,8 @@ function Login() {
     {
       console.log(data.message);
       localStorage.setItem('token', data.token);
+      setCookie("cookie", data.token, 365);
+      
       navigate('/home')
     }
 

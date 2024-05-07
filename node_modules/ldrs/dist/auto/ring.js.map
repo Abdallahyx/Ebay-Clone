@@ -1,0 +1,1 @@
+{"version":3,"file":"ring.js","sources":["../../temp-ts-out/auto/ring.js"],"sourcesContent":["import ring from '../elements/ring.js';\nring.register();\n"],"names":["ring","register"],"mappings":"qEACAA,EAAKC"}
